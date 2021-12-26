@@ -4,4 +4,3 @@ pandas
 torch==1.8.1+cu111
 sklearn
 matplotlib
-urllib

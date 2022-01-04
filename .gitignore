@@ -185,3 +185,5 @@ pip-selfcheck.json
 *.vsix
 
 datasets/
+images/
+datasets-exported/

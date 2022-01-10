@@ -65,7 +65,7 @@ print(
 scores = grid.cv_results_["mean_test_score"].reshape(len(C_range), len(gamma_range))
 
 for score in scores :
-    print(*score.round(3), sep= "\t")
+    print(score, sep= "\t")
 
 # Draw heatmap of the validation accuracy as a function of gamma and C
 #

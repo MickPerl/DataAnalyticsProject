@@ -26,20 +26,18 @@ class MidpointNormalize(Normalize):
         x, y = [self.vmin, self.midpoint, self.vmax], [0, 0.5, 1]
         return np.ma.masked_array(np.interp(value, x, y))
 
-if not os.path.exists("df_script"):
-    os.makedirs("df_script")
 
 try : 
-    df = pd.read_csv(os.path.join("df_script", "df_script_RBF.csv"))
+    df = pd.read_csv("df_RBF.csv")
 except FileNotFoundError:
     print("Download in progress")
-    file, _ = urlretrieve(url = "https://github.com/MickPerl/DataAnalyticsProject/releases/download/dataset_script/df_script_RBF.csv", filename= os.path.join("df_script", "df_script_RBF.csv"))
+    file, _ = urlretrieve(url = "https://github.com/MickPerl/DataAnalyticsProject/releases/download/dataset_script/df_script_RBF.csv", filename= "df_RBF.csv")
     df = pd.read_csv(file)
 
 print("post-loading-data")
 
-X = df.loc[:, df.columns != 'bin_y']
-y = df['bin_y']
+X = df.loc[:, df.columns != 'y']
+y = df['y']
 #############################################################################
 # Train classifiers
 #
@@ -94,4 +92,4 @@ plt.colorbar()
 plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
 plt.yticks(np.arange(len(C_range)), C_range)
 plt.title("Validation accuracy")
-plt.savefig(os.path.join("images", "Output.png"),facecolor='white', transparent=False)
+plt.savefig(os.path.join("..","images", "Output.png"),facecolor='white', transparent=False)

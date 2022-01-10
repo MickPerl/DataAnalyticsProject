@@ -27,19 +27,18 @@ class MidpointNormalize(Normalize):
         x, y = [self.vmin, self.midpoint, self.vmax], [0, 0.5, 1]
         return np.ma.masked_array(np.interp(value, x, y))
 
-if not os.path.exists("df_script"):
-    os.makedirs("df_script")
-
 try : 
-    df = pd.read_csv(os.path.join("df_script", "df_reduced_script_RBF.csv"))
+    df = pd.read_csv("df_reduced_RBF.csv")
+    
 except FileNotFoundError:
     print("Download in progress")
-    file, _ = urlretrieve(url = "https://github.com/MickPerl/DataAnalyticsProject/releases/download/dataset_script/df_reduced_script_RBF.csv", filename= os.path.join("df_script", "df_reduced_script_RBF.csv"))
+    file, _ = urlretrieve(url = "https://github.com/MickPerl/DataAnalyticsProject/releases/download/dataset_script/df_reduced_RBF.csv", filename= "df_reduced_RBF.csv")
     df = pd.read_csv(file)
 
+
 print("post-loading-data")
-X = df.loc[:, df.columns != 'bin_y']
-y = df['bin_y']
+X = df.iloc[:, df.columns != 'y']
+y = df['y']
 #############################################################################
 # Train classifiers
 #
@@ -47,8 +46,8 @@ y = df['bin_y']
 # 10 is often helpful. Using a basis of 2, a finer
 # tuning can be achieved but at a much higher cost.
 
-C_range = np.logspace(-2, 10, 13)
-gamma_range = np.logspace(-9, 3, 13)
+C_range = np.logspace(-2, 10, 2)
+gamma_range = np.logspace(-9, 3, 2)
 param_grid = dict(gamma=gamma_range, C=C_range)
 cv = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=42)
 grid = GridSearchCV(SVC(kernel = 'rbf'), param_grid=param_grid, cv=cv)

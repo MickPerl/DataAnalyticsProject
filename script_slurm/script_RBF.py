@@ -45,11 +45,11 @@ y = df['y']
 # 10 is often helpful. Using a basis of 2, a finer
 # tuning can be achieved but at a much higher cost.
 
-C_range = np.logspace(-2, 10, 13)
-gamma_range = np.logspace(-9, 3, 13)
+C_range = np.logspace(-2, 10, 6)
+gamma_range = np.logspace(-9, 3, 6)
 param_grid = dict(gamma=gamma_range, C=C_range)
-cv = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=42)
-grid = GridSearchCV(SVC(kernel = 'rbf'), param_grid=param_grid, cv=cv)
+cv = StratifiedShuffleSplit(n_splits=2, test_size=0.2, random_state=42)
+grid = GridSearchCV(SVC(kernel = 'rbf'), param_grid=param_grid, cv=cv, verbose=3)
 grid.fit(X, y)
 
 print(
@@ -92,4 +92,4 @@ plt.colorbar()
 plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
 plt.yticks(np.arange(len(C_range)), C_range)
 plt.title("Validation accuracy")
-plt.savefig(os.path.join("..","images", "Output.png"),facecolor='white', transparent=False)
+plt.savefig("Output.png",facecolor='white', transparent=False)

@@ -12,7 +12,7 @@ from sklearn.datasets import load_iris
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.model_selection import GridSearchCV
 
-
+print("post-import")
 # Utility function to move the midpoint of a colormap to be around
 # the values of interest.
 
@@ -35,6 +35,8 @@ except FileNotFoundError:
     print("Download in progress")
     file, _ = urlretrieve(url = "https://github.com/MickPerl/DataAnalyticsProject/releases/download/dataset_script/df_script_RBF.csv", filename= os.path.join("df_script", "df_script_RBF.csv"))
     df = pd.read_csv(file)
+
+print("post-loading-data")
 
 X = df.loc[:, df.columns != 'bin_y']
 y = df['bin_y']

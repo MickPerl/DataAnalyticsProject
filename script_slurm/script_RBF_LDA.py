@@ -17,6 +17,7 @@ from sklearn.model_selection import GridSearchCV
 # the values of interest.
 
 
+print("post-import")
 class MidpointNormalize(Normalize):
     def __init__(self, vmin=None, vmax=None, midpoint=None, clip=False):
         self.midpoint = midpoint
@@ -36,6 +37,7 @@ except FileNotFoundError:
     file, _ = urlretrieve(url = "https://github.com/MickPerl/DataAnalyticsProject/releases/download/dataset_script/df_reduced_script_RBF.csv", filename= os.path.join("df_script", "df_reduced_script_RBF.csv"))
     df = pd.read_csv(file)
 
+print("post-loading-data")
 X = df.loc[:, df.columns != 'bin_y']
 y = df['bin_y']
 #############################################################################

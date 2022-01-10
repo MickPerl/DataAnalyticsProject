@@ -31,7 +31,7 @@ try :
     df = pd.read_csv("df_RBF.csv")
 except FileNotFoundError:
     print("Download in progress")
-    file, _ = urlretrieve(url = "https://github.com/MickPerl/DataAnalyticsProject/releases/download/dataset_script/df_script_RBF.csv", filename= "df_RBF.csv")
+    file, _ = urlretrieve(url = "https://github.com/MickPerl/DataAnalyticsProject/releases/download/dataset_script/df_RBF.csv", filename= "df_RBF.csv")
     df = pd.read_csv(file)
 
 print("post-loading-data")

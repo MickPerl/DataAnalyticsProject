@@ -1,6 +1,0 @@
-links: non lo utilizzeremo in una prima fase (serve per prendere altri campioni)
-movies: film con ID, titolo e categorie
-rating: voto del film assegnato dall'USER
-tags: lista dei tag assegnati dagli USER per film votato (INPUT UTENTI)
-genome_tags: lista di tutti i tag esistenti tags (POST PROCESSING)
-genome-scores: per ogni film il peso del tag (POST PROCESSING)

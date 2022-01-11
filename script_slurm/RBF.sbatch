@@ -2,11 +2,11 @@
 #SBATCH --job-name=RBF
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=michele.perlino@studio.unibo.it
-#SBATCH --time=300:00:00
+#SBATCH --time=500:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --error=erroroutput.txt
-#SBATCH --output=soutput.txt
+#SBATCH --output=output.txt
 #SBATCH --gres=gpu:1
 
 source ../venv/bin/activate

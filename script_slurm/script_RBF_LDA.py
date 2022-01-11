@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import time
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
@@ -37,7 +38,7 @@ except FileNotFoundError:
 
 
 print("post-loading-data")
-X = df.iloc[:, df.columns != 'y']
+X = df.loc[:, df.columns != 'y']
 y = df['y']
 #############################################################################
 # Train classifiers
@@ -45,14 +46,14 @@ y = df['y']
 # For an initial search, a logarithmic grid with basis
 # 10 is often helpful. Using a basis of 2, a finer
 # tuning can be achieved but at a much higher cost.
-
-C_range = np.logspace(-2, 10, 6)
-gamma_range = np.logspace(-9, 3, 6)
+a = time.time()
+C_range = np.logspace(-2, 5, 8)
+gamma_range = np.logspace(-5, 2, 8)
 param_grid = dict(gamma=gamma_range, C=C_range)
-cv = StratifiedShuffleSplit(n_splits=2, test_size=0.2, random_state=42)
+cv = StratifiedShuffleSplit(n_splits=3, test_size=0.2, random_state=43)
 grid = GridSearchCV(SVC(kernel = 'rbf'), param_grid=param_grid, cv=cv, verbose=3)
 grid.fit(X, y)
-
+print(time.time()-a)
 print(
     "The best parameters are %s with a score of %0.2f"
     % (grid.best_params_, grid.best_score_)
@@ -68,7 +69,7 @@ print(
 scores = grid.cv_results_["mean_test_score"].reshape(len(C_range), len(gamma_range))
 
 for score in scores :
-    print(score, sep= "\t")
+    print(*score.round(2), sep= "\t")
 
 # Draw heatmap of the validation accuracy as a function of gamma and C
 #
@@ -90,7 +91,8 @@ plt.imshow(
 plt.xlabel("gamma")
 plt.ylabel("C")
 plt.colorbar()
-plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
-plt.yticks(np.arange(len(C_range)), C_range)
+plt.xticks(np.arange(len(gamma_range)), gamma_range.round(6), rotation=45)
+plt.yticks(np.arange(len(C_range)), C_range.round(6))
 plt.title("Validation accuracy")
-plt.savefig("Output_reduced.png",facecolor='white', transparent=False)
+
+plt.savefig("Output_reduced.png",facecolor='white', transparent=False, dpi=1000)

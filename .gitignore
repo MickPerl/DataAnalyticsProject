@@ -186,4 +186,4 @@ pip-selfcheck.json
 
 datasets/
 images/
-sript_slurm/*.csv
+*.csv

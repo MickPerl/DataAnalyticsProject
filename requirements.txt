@@ -8,3 +8,4 @@ seaborn
 imbalanced-learn
 jupyter
 plotly
+matplotlib-inline

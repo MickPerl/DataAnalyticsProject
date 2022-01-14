@@ -104,9 +104,6 @@ for c in C_range:
 			print("PRE-PROCESSING --> MinMaxScaling")
 			X_train_SVC, X_val_SVC, X_test_SVC = MinMaxScaling(X_train_SVC, X_val_SVC, X_test_SVC, ['title_length','year'])
 
-			print("PRE-PROCESSING --> LDA")
-			X_train_SVC, X_val_SVC, X_test_SVC = LDA(X_train_SVC, X_val_SVC, X_test_SVC, y_train_SVC)
-
 			print("FITTING & PREDICTING")
 			svc = svm.SVC(kernel="rbf", C=c, gamma=gamma)
 			svc.fit(X_train_SVC, y_train_SVC)

@@ -27,29 +27,30 @@ def MinMaxScaling(X_train, X_val, X_test, cols):
 	return X_train_minmaxscaled, X_val_minmaxscaled, X_test_minmaxscaled
 
 def sampling(data, n_samples, size):
-	samples = []
-	for s in range(n_samples):
-		if len(data) >= n_samples * size:
-			data = shuffle(data, random_state=43).reset_index(drop=True)
-			start = s * size
-			end = start + size
-			samples.append(data.iloc[start:end])
-		else:
-			try:
-				samples.append(data.sample(size, replace=False, ignore_index=True))
-			except:
-				data = shuffle(data, random_state=43).reset_index(drop=True)
-				nr = size - len(data)
-				noises = np.random.normal(0, 0.5, size = (nr, len(data.columns)))
-				random_indexes = np.random.randint(low = 0, high = len(data), size = nr)
-				new_rows = data.iloc[random_indexes, :] * noises
-				new_rows.bin_y = data.iloc[random_indexes, -1]
-				data = data.append(new_rows, ignore_index=True)
-				samples.append(data)
+    samples = []
+    if(len(data) >= n_samples * size):
+        data = shuffle(data, random_state=43).reset_index(drop=True)
+        for s in range(n_samples):
+            start = s * size
+            end = start + size
+            samples.append(data.iloc[start:end])
+    elif(len(data) >= size) :
+        for s in range(n_samples):
+            samples.append(data.sample(size, replace=False, ignore_index=True))
+    else:
+        for s in range(n_samples):
+            data = shuffle(data, random_state=43).reset_index(drop=True)
+            nr = size - len(data)
+            noises = np.random.uniform(0.8, 1.2, size = (nr, len(data.columns)))
+            random_indexes = np.random.randint(low = 0, high = len(data), size = nr)
+            new_rows = data.iloc[random_indexes, :] * noises
+            new_rows.bin_y = data.iloc[random_indexes, -1]
+            data = data.append(new_rows, ignore_index=True)
+            samples.append(data)
 
-	return samples
+    return samples
 
-def MultipleRandomUnderSampling(df, size, n_samples = 10): 
+def RandomSubSampling(df, size, n_samples = 10): 
 	df_samples = [pd.DataFrame(columns=df.columns) for x in range(n_samples)]
 	for c in df.bin_y.unique():       
 		df_class_c = df[df.bin_y == c]
@@ -60,7 +61,6 @@ def MultipleRandomUnderSampling(df, size, n_samples = 10):
 			df_samples[idx_sample] = df_samples[idx_sample].append(df_class_c_samples[idx_sample], ignore_index=True)
 	
 	return df_samples
-
 
 def split_XYweights(df):
 	y = df['bin_y'].astype('int')
@@ -74,7 +74,7 @@ df_test = pd.read_csv("df_test.csv")
 df_val = pd.read_csv("df_val.csv")
 
 
-df_trains = MultipleRandomUnderSampling(df_train, 2000, n_samples=7)
+df_trains = RandomSubSampling(df_train, 2000, n_samples=7)
 
 size_C_range = 8
 size_gamma_range = 8
@@ -83,15 +83,15 @@ nr_configurations = size_gamma_range*size_C_range
 C_range = np.logspace(-2, 5, size_C_range)
 gamma_range = np.logspace(-5, 2, size_gamma_range)
 
-results = pd.DataFrame(columns=['C', 'gamma', 'error_ensemble'])
-
+results = pd.DataFrame(columns=['C', 'gamma', 'loss_ensemble'])
 config = 0
+
 for c in C_range:
 	for gamma in gamma_range:
-		config += 1
 		y_val_preds = []
+		config += 1
 		print(f"************************************** {config} out of {nr_configurations} params' configurations --> C: {c}, gamma: {gamma}")
-				
+
 		print("***********STARTING BAGGING***********")
 		for n in range(len(df_trains)):
 			print(f"****{n+1}° FIT su {n+1}° sample del train****")
@@ -103,6 +103,9 @@ for c in C_range:
 
 			print("PRE-PROCESSING --> MinMaxScaling")
 			X_train_SVC, X_val_SVC, X_test_SVC = MinMaxScaling(X_train_SVC, X_val_SVC, X_test_SVC, ['title_length','year'])
+
+			print("PRE-PROCESSING --> LDA")
+			X_train_SVC, X_val_SVC, X_test_SVC = LDA(X_train_SVC, X_val_SVC, X_test_SVC, y_train_SVC)
 
 			print("FITTING & PREDICTING")
 			svc = svm.SVC(kernel="rbf", C=c, gamma=gamma)
@@ -126,13 +129,13 @@ for c in C_range:
 		for prediction in range(nr_predictions):
 			y_val_pred_voted.append(Counter([item[prediction] for item in y_val_preds]).most_common(1)[0][0])
 
-		error_ensemble = zero_one_loss(y_val_SVC, y_val_pred_voted)
-		print(f"LOSS ENSEMBLE (C: {c}, gamma: {gamma}) --> {error_ensemble}\n\n")
+		loss_ensemble = zero_one_loss(y_val_SVC, y_val_pred_voted)
+		print(f"LOSS ENSEMBLE (C: {c}, gamma: {gamma}) --> {loss_ensemble}\n\n")
         
 		results = results.append({
 			'C': c,
 			'gamma': gamma,
-			'error_ensemble': error_ensemble
+			'loss_ensemble': loss_ensemble
 		}, ignore_index=True)
 
 

@@ -1,12 +1,12 @@
 #!/bin/bash
-#SBATCH --job-name=ldaOverUndersampleRbf
+#SBATCH --job-name=LDAOU_RBFRbf
 #SBATCH --mail-type=END
 #SBATCH --mail-user=michele.perlino@studio.unibo.it
 #SBATCH --time=500:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --error=err_lda_overundersampling_rbf.txt
-#SBATCH --output=lda_overundersampling_rbf.txt
+#SBATCH --error=err_lda_overunder_rbf.txt
+#SBATCH --output=lda_overunder_rbf.txt
 #SBATCH --gres=gpu:1
 
 source ../venv/bin/activate

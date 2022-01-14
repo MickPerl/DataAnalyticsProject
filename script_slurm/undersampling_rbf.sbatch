@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=RBF
+#SBATCH --job-name=UndersampleRbf
 #SBATCH --mail-type=END
 #SBATCH --mail-user=michele.perlino@studio.unibo.it
 #SBATCH --time=500:00:00

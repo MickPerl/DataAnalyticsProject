@@ -72,7 +72,7 @@ df_test = pd.read_csv("df_test.csv")
 df_val = pd.read_csv("df_val.csv")
 
 
-df_trains = MultipleRandomUnderSampling(df_train, 2000, n_samples=12)
+df_trains = MultipleRandomUnderSampling(df_train, 2000, n_samples=7)
 
 size_C_range = 8
 size_gamma_range = 8

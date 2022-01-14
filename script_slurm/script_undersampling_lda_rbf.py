@@ -96,6 +96,7 @@ gamma_range = np.logspace(-5, 2, size_gamma_range)
 
 results = pd.DataFrame(columns=['C', 'gamma', 'error_ensemble'])
 
+config = 0
 for c in C_range:
 	for gamma in gamma_range:
 		y_val_preds = []

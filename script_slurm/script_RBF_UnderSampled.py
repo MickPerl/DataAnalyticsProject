@@ -2,97 +2,123 @@
 # -*- coding: utf-8 -*-
 import time
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.colors import Normalize
 import pandas as pd
-from urllib.request import urlretrieve
-import os
-from sklearn.svm import SVC
-from sklearn.preprocessing import StandardScaler
-from sklearn.datasets import load_iris
-from sklearn.model_selection import StratifiedShuffleSplit
-from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import zero_one_loss
+from sklearn import svm
+from sklearn.utils import shuffle
+from collections import Counter
+
+def MinMaxScaling(X_train, X_val, X_test, cols):
+	X_train_minmaxscaled = X_train.copy()
+	X_val_minmaxscaled = X_val.copy()
+	X_test_minmaxscaled = X_test.copy()
+	
+	for col in cols:
+		min = np.min(X_train[col])
+		max = np.max(X_train[col])
+		range = max - min
+
+		X_train_minmaxscaled[col] = (X_train[col] - min) / range
+		X_val_minmaxscaled[col] = (X_val[col] - min) / range
+		X_test_minmaxscaled[col] = (X_test[col] - min) / range
+
+	return X_train_minmaxscaled, X_val_minmaxscaled, X_test_minmaxscaled
+
+def sampling(data, n_samples, size):
+	samples = []
+	for s in range(n_samples):
+		if len(data) >= n_samples * size:
+			data = shuffle(data, random_state=43).reset_index(drop=True)
+			start = s * size
+			end = start + size
+			samples.append(data.iloc[start:end])
+		else:
+			samples.append(data.sample(size, replace=False, ignore_index=True))
+
+	return samples
+
+def MultipleRandomUnderSampling(df, size, n_samples = 10): 
+	df_samples = [pd.DataFrame(columns=df.columns) for x in range(n_samples)]
+	for c in df.bin_y.unique():       
+		df_class_c = df[df.bin_y == c]
+		
+		df_class_c_samples = sampling(df_class_c, n_samples, size)
+		
+		for idx_sample in range(n_samples):
+			df_samples[idx_sample] = df_samples[idx_sample].append(df_class_c_samples[idx_sample], ignore_index=True)
+	
+	return df_samples
 
 
-# Utility function to move the midpoint of a colormap to be around
-# the values of interest.
+def split_XYweights(df):
+	y = df['bin_y'].astype('int')
+	weights = df['ratings_count']
+	X = df.drop(columns=['bin_y', 'rating_mean', 'ratings_count'], axis=1)
+	
+	return X, y, weights
 
+df_train = pd.read_csv("df_train.csv")
+df_test = pd.read_csv("df_test.csv")
+df_val = pd.read_csv("df_val.csv")
 
-print("post-import")
-class MidpointNormalize(Normalize):
-    def __init__(self, vmin=None, vmax=None, midpoint=None, clip=False):
-        self.midpoint = midpoint
-        Normalize.__init__(self, vmin, vmax, clip)
+min_bin_cardinality = df_train.bin_y.value_counts().min()
+df_trains = MultipleRandomUnderSampling(df_train, min_bin_cardinality, n_samples=12)
 
-    def __call__(self, value, clip=None):
-        x, y = [self.vmin, self.midpoint, self.vmax], [0, 0.5, 1]
-        return np.ma.masked_array(np.interp(value, x, y))
-
-try : 
-    df = pd.read_csv("df_reduced_RBF.csv")
-    
-except FileNotFoundError:
-    print("Download in progress")
-    file, _ = urlretrieve(url = "https://github.com/MickPerl/DataAnalyticsProject/releases/download/dataset_script/df_reduced_RBF.csv", filename= "df_reduced_RBF.csv")
-    df = pd.read_csv(file)
-
-
-print("post-loading-data")
-X = df.loc[:, df.columns != 'y']
-y = df['y']
-#############################################################################
-# Train classifiers
-#
-# For an initial search, a logarithmic grid with basis
-# 10 is often helpful. Using a basis of 2, a finer
-# tuning can be achieved but at a much higher cost.
-a = time.time()
 C_range = np.logspace(-2, 5, 8)
 gamma_range = np.logspace(-5, 2, 8)
-param_grid = dict(gamma=gamma_range, C=C_range)
-cv = StratifiedShuffleSplit(n_splits=3, test_size=0.2, random_state=43)
-grid = GridSearchCV(SVC(kernel = 'rbf'), param_grid=param_grid, cv=cv, verbose=3)
-grid.fit(X, y)
-print(time.time()-a)
-print(
-    "The best parameters are %s with a score of %0.2f"
-    % (grid.best_params_, grid.best_score_)
-)
 
-# #############################################################################
-# Visualization
-#
-# draw visualization of parameter effects
+results = pd.DataFrame(columns=['C', 'gamma', 'error_ensemble'])
 
+for c in C_range:
+	for gamma in gamma_range:
+		y_val_preds = []
+		print(f"PARAMS --> C: {c}, gamma: {gamma}")
 
+		print("***********STARTING BAGGING***********")
+		for n in range(len(df_trains)):
+			print(f"****{n+1}° FIT su {n+1}° sample del train****")
 
-scores = grid.cv_results_["mean_test_score"].reshape(len(C_range), len(gamma_range))
+			print("PRE-PROCESSING --> MinMaxScaling")
+			df_train_SVC, df_val_SVC, df_test_SVC = MinMaxScaling(df_trains[n], df_val, df_test, ['title_length','year'])
 
-for score in scores :
-    print(*score.round(2), sep= "\t")
+			print("PRE-PROCESSING --> split_XYweights")
+			X_train_SVC, y_train_SVC, weights = split_XYweights(df_train_SVC)
+			X_val_SVC, y_val_SVC, _ = split_XYweights(df_val_SVC)
+			X_test_SVC, y_test_SVC, _ = split_XYweights(df_test_SVC)
 
-# Draw heatmap of the validation accuracy as a function of gamma and C
-#
-# The score are encoded as colors with the hot colormap which varies from dark
-# red to bright yellow. As the most interesting scores are all located in the
-# 0.92 to 0.97 range we use a custom normalizer to set the mid-point to 0.92 so
-# as to make it easier to visualize the small variations of score values in the
-# interesting range while not brutally collapsing all the low score values to
-# the same color.
+			# print("PRE-PROCESSING --> LDA")
+			# X_train_SVC, X_val_SVC, X_test_SVC = LDA(X_train_SVC, X_val_SVC, X_test_SVC, y_train_SVC)
 
-plt.figure(figsize=(8, 6))
-plt.subplots_adjust(left=0.2, right=0.95, bottom=0.15, top=0.95)
-plt.imshow(
-    scores,
-    interpolation="nearest",
-    cmap=plt.cm.hot,
-    norm=MidpointNormalize(vmin=0.2, midpoint=0.92),
-)
-plt.xlabel("gamma")
-plt.ylabel("C")
-plt.colorbar()
-plt.xticks(np.arange(len(gamma_range)), gamma_range.round(6), rotation=45)
-plt.yticks(np.arange(len(C_range)), C_range.round(6))
-plt.title("Validation accuracy")
+			print("FITTING")
+			svc = svm.SVC(kernel="rbf", C=c, gamma=gamma)
+			svc.fit(X_train_SVC, y_train_SVC)
 
-plt.savefig("Output_reduced.png",facecolor='white', transparent=False, dpi=1000)
+			print("PREDICTING")
+			y_val_pred = svc.predict(X_val_SVC).tolist()
+			y_val_preds.append(y_val_pred)
+
+			error = zero_one_loss(y_val_SVC, y_val_pred)
+			print(f"LOSS --> {error}")
+
+		print("***********ENDING BAGGING***********")
+
+		# y_val_preds = [[predictions after fit su 1° sample], [predictions after fit su 2° sample], [...], ...]
+		# therefore, len(y_val_preds) == len(df_trains)
+		# 			 len(y_val_preds[idx]) == len(X_val_SVC) == nr different predictions, with idx the n-th sample
+		
+		# cols = len(y_val_preds)	inutile sia l'assegnamento, sia perché non lo usi (forse solo per stampare lo tenevi), ma se ti è più chiara rimettila
+		nr_predictions = len(y_val_preds[0])
+		
+		y_val_pred_voted = []
+		print("VOTING")
+		for prediction in range(nr_predictions):
+			y_val_pred_voted.append(Counter([item[prediction] for item in y_val_preds]).most_common(1)[0][0])
+
+		error_ensemble = zero_one_loss(y_val_SVC, y_val_pred_voted)
+		print(f"LOSS ENSEMBLE (C: {c}, gamma: {gamma}) --> {error_ensemble}\n\n")
+        
+		results = results.append({
+			'C': c,
+			'gamma': gamma,
+			'error_ensemble': error_ensemble
+		}, ignore_index=True)

@@ -41,7 +41,7 @@ def sampling(data, n_samples, size):
         for s in range(n_samples):
             data = shuffle(data, random_state=43).reset_index(drop=True)
             nr = size - len(data)
-            noises = np.random.uniform(0.8, 1.2, size = (nr, len(data.columns)))
+            noises = np.random.uniform(0.95, 1.05, size = (nr, len(data.columns)))
             random_indexes = np.random.randint(low = 0, high = len(data), size = nr)
             new_rows = data.iloc[random_indexes, :] * noises
             new_rows.bin_y = data.iloc[random_indexes, -1]
@@ -73,8 +73,8 @@ df_train = pd.read_csv("df_train.csv")
 df_test = pd.read_csv("df_test.csv")
 df_val = pd.read_csv("df_val.csv")
 
-
-df_trains = RandomSubSampling(df_train, 2000, n_samples=7)
+min_bin_cardinality = df_train.bin_y.value_counts().min()
+df_trains = RandomSubSampling(df_train, min_bin_cardinality, n_samples=12)
 
 size_C_range = 8
 size_gamma_range = 8
@@ -136,4 +136,4 @@ for c in C_range:
 		}, ignore_index=True)
 
 
-results.to_csv("results_overundersampling_rbf.csv", index=False)
+results.to_csv("results_undersampling_rbf.csv", index=False)

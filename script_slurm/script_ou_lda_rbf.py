@@ -7,6 +7,7 @@ from sklearn.metrics import zero_one_loss
 from sklearn import svm
 from sklearn.utils import shuffle
 from collections import Counter
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 np.random.seed(42)
 
@@ -41,7 +42,7 @@ def sampling(data, n_samples, size):
         for s in range(n_samples):
             data = shuffle(data, random_state=43).reset_index(drop=True)
             nr = size - len(data)
-            noises = np.random.uniform(0.8, 1.2, size = (nr, len(data.columns)))
+            noises = np.random.uniform(0.95, 1.05, size = (nr, len(data.columns)))
             random_indexes = np.random.randint(low = 0, high = len(data), size = nr)
             new_rows = data.iloc[random_indexes, :] * noises
             new_rows.bin_y = data.iloc[random_indexes, -1]
@@ -69,12 +70,33 @@ def split_XYweights(df):
 	
 	return X, y, weights
 
+def LDA(X_train, X_val, X_test, y):
+	lda = LinearDiscriminantAnalysis(solver = "eigen")
+	lda.fit(X_train, y)
+
+	s = 0
+	nr_canonical_variables = 1
+	for comp in lda.explained_variance_ratio_:
+		s += comp
+		if s > 0.95:
+			break
+		nr_canonical_variables += 1
+
+	X_train = lda.transform(X_train)
+	X_train = X_train[:,:nr_canonical_variables]
+	X_train = pd.DataFrame(X_train, columns = [f"LD{i}" for i in range(1, X_train.shape[1] + 1)])
+
+	X_val = pd.DataFrame(lda.transform(X_val)[:,:nr_canonical_variables], columns = [f"LD{i}" for i in range(1, X_train.shape[1] + 1)])
+	X_test = pd.DataFrame(lda.transform(X_test)[:,:nr_canonical_variables], columns = [f"LD{i}" for i in range(1, X_train.shape[1] + 1)])
+
+	return X_train, X_val, X_test
+
+
 df_train = pd.read_csv("df_train.csv")
 df_test = pd.read_csv("df_test.csv")
 df_val = pd.read_csv("df_val.csv")
 
-min_bin_cardinality = df_train.bin_y.value_counts().min()
-df_trains = RandomSubSampling(df_train, min_bin_cardinality, n_samples=12)
+df_trains = RandomSubSampling(df_train, 2000, n_samples=7)
 
 size_C_range = 8
 size_gamma_range = 8
@@ -103,6 +125,9 @@ for c in C_range:
 
 			print("PRE-PROCESSING --> MinMaxScaling")
 			X_train_SVC, X_val_SVC, X_test_SVC = MinMaxScaling(X_train_SVC, X_val_SVC, X_test_SVC, ['title_length','year'])
+
+			print("PRE-PROCESSING --> LDA")
+			X_train_SVC, X_val_SVC, X_test_SVC = LDA(X_train_SVC, X_val_SVC, X_test_SVC, y_train_SVC)
 
 			print("FITTING & PREDICTING")
 			svc = svm.SVC(kernel="rbf", C=c, gamma=gamma)
@@ -135,5 +160,4 @@ for c in C_range:
 			'loss_ensemble': loss_ensemble
 		}, ignore_index=True)
 
-
-results.to_csv("results_undersampling_rbf.csv", index=False)
+results.to_csv("results_lda_overundersampling_rbf.csv", index=False)

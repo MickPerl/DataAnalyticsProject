@@ -5,8 +5,8 @@
 #SBATCH --time=500:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --error=err_lda_OverUndersampling_rbf.txt
-#SBATCH --output=lda_undersampling_rbf.txt
+#SBATCH --error=err_lda_overundersampling_rbf.txt
+#SBATCH --output=lda_overundersampling_rbf.txt
 #SBATCH --gres=gpu:1
 
 source ../venv/bin/activate

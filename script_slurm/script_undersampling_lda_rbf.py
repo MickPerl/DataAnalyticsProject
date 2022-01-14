@@ -87,15 +87,19 @@ df_val = pd.read_csv("df_val.csv")
 min_bin_cardinality = df_train.bin_y.value_counts().min()
 df_trains = MultipleRandomUnderSampling(df_train, min_bin_cardinality, n_samples=12)
 
-C_range = np.logspace(-2, 5, 8)
-gamma_range = np.logspace(-5, 2, 8)
+size_C_range = 8
+size_gamma_range = 8
+nr_configurations = size_gamma_range*size_C_range
+
+C_range = np.logspace(-2, 5, size_C_range)
+gamma_range = np.logspace(-5, 2, size_gamma_range)
 
 results = pd.DataFrame(columns=['C', 'gamma', 'error_ensemble'])
 
 for c in C_range:
 	for gamma in gamma_range:
 		y_val_preds = []
-		print(f"PARAMS --> C: {c}, gamma: {gamma}")
+		print(f"************************************** {config} out of {nr_configurations} params' configurations --> C: {c}, gamma: {gamma}")
 
 		print("***********STARTING BAGGING***********")
 		for n in range(len(df_trains)):

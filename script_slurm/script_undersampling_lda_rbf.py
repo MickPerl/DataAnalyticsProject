@@ -99,6 +99,7 @@ results = pd.DataFrame(columns=['C', 'gamma', 'error_ensemble'])
 config = 0
 for c in C_range:
 	for gamma in gamma_range:
+		config += 1
 		y_val_preds = []
 		print(f"************************************** {config} out of {nr_configurations} params' configurations --> C: {c}, gamma: {gamma}")
 

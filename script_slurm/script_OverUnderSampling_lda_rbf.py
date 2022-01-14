@@ -9,6 +9,8 @@ from sklearn.utils import shuffle
 from collections import Counter
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
+np.random.seed(42)
+
 def MinMaxScaling(X_train, X_val, X_test, cols):
 	X_train_minmaxscaled = X_train.copy()
 	X_val_minmaxscaled = X_val.copy()

@@ -94,8 +94,7 @@ df_train = pd.read_csv("df_train.csv")
 df_test = pd.read_csv("df_test.csv")
 df_val = pd.read_csv("df_val.csv")
 
-min_bin_cardinality = df_train.bin_y.value_counts().min()
-df_trains = MultipleRandomUnderSampling(df_train, min_bin_cardinality, n_samples=12)
+df_trains = MultipleRandomUnderSampling(df_train, 2000, n_samples=12)
 
 size_C_range = 8
 size_gamma_range = 8

@@ -122,3 +122,6 @@ for c in C_range:
 			'gamma': gamma,
 			'error_ensemble': error_ensemble
 		}, ignore_index=True)
+
+
+results.to_csv("results_undersampling_rbf.csv", index=False)

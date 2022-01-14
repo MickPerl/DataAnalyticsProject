@@ -34,7 +34,17 @@ def sampling(data, n_samples, size):
 			end = start + size
 			samples.append(data.iloc[start:end])
 		else:
-			samples.append(data.sample(size, replace=False, ignore_index=True))
+			try:
+				samples.append(data.sample(size, replace=False, ignore_index=True))
+			except:
+				data = shuffle(data, random_state=43).reset_index(drop=True)
+				nr = size - len(data)
+				noises = np.random.normal(0, 0.5, size = (nr, len(data.columns)))
+				random_indexes = np.random.randint(low = 0, high = len(data), size = nr)
+				new_rows = data.iloc[random_indexes, :] * noises
+				new_rows.bin_y = data.iloc[random_indexes, -1]
+				data = data.append(new_rows, ignore_index=True)
+				samples.append(data)
 
 	return samples
 
@@ -59,7 +69,7 @@ def split_XYweights(df):
 	return X, y, weights
 
 def LDA(X_train, X_val, X_test, y):
-	lda = LinearDiscriminantAnalysis()
+	lda = LinearDiscriminantAnalysis(solver = "eigen")
 	lda.fit(X_train, y)
 
 	s = 0

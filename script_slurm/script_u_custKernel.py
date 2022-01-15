@@ -83,13 +83,13 @@ def split_XYweights(df):
 	
 	return X, y, weights
 
-df_train = pd.read_csv("script_slurm/df_train.csv")
-df_test = pd.read_csv("script_slurm/df_test.csv")
-df_val = pd.read_csv("script_slurm/df_val.csv")
+df_train = pd.read_csv("df_train.csv")
+df_test = pd.read_csv("df_test.csv")
+df_val = pd.read_csv("df_val.csv")
 
 min_bin_cardinality = df_train.bin_y.value_counts().min()
 # df_train_SMOTE = balancing(df_train, min_bin_cardinality)
-df_trains = RandomSubSets(df_train_SMOTE, min_bin_cardinality, n_samples=7)
+df_trains = RandomSubSets(df_train, min_bin_cardinality, n_samples=7)
 
 size_C_range = 8
 size_gamma_range = 8

@@ -83,9 +83,9 @@ def split_XYweights(df):
 	
 	return X, y, weights
 
-df_train = pd.read_csv("script_slurm/df_train.csv")
-df_test = pd.read_csv("script_slurm/df_test.csv")
-df_val = pd.read_csv("script_slurm/df_val.csv")
+df_train = pd.read_csv("df_train.csv")
+df_test = pd.read_csv("df_test.csv")
+df_val = pd.read_csv("df_val.csv")
 
 size = 2000
 df_train_SMOTE = balancing(df_train, size)

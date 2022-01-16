@@ -133,7 +133,7 @@ for c in C_range:
 			svc = svm.SVC(kernel="precomputed", C=c, gamma=gamma)
 			svc.fit(train_distances, y_train_SVC)
 
-			val_distances = cdist(X_test_SVC.values, X_train_SVC.values, lambda a,b: distance(a,b))
+			val_distances = cdist(X_val_SVC.values, X_train_SVC.values, lambda a,b: distance(a,b))
 			y_val_pred = svc.predict(val_distances).tolist()
 			y_val_preds.append(y_val_pred)
 

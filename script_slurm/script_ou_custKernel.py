@@ -83,9 +83,9 @@ def split_XYweights(df):
 	
 	return X, y, weights
 
-df_train = pd.read_csv("script_slurm/df_train.csv")
-df_test = pd.read_csv("script_slurm/df_test.csv")
-df_val = pd.read_csv("script_slurm/df_val.csv")
+df_train = pd.read_csv("df_train.csv")
+df_test = pd.read_csv("df_test.csv")
+df_val = pd.read_csv("df_val.csv")
 
 size = 2000
 df_train_SMOTE = balancing(df_train, size)
@@ -133,7 +133,7 @@ for c in C_range:
 			svc = svm.SVC(kernel="precomputed", C=c, gamma=gamma)
 			svc.fit(train_distances, y_train_SVC)
 
-			val_distances = cdist(X_test_SVC.values, X_train_SVC.values, lambda a,b: distance(a,b))
+			val_distances = cdist(X_val_SVC.values, X_train_SVC.values, lambda a,b: distance(a,b))
 			y_val_pred = svc.predict(val_distances).tolist()
 			y_val_preds.append(y_val_pred)
 

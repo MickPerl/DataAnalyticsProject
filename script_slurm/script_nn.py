@@ -237,17 +237,17 @@ if __name__ == "__main__":
 	sampler_class_frequency = WeightedRandomSampler(sample_weights, len(train_idx))
 
 	# MinMaxScaling ratings_count
-	weights_train = dataset.weights[train_idx] 
-	weights_val = dataset.weights[val_idx]
-	weights_test = dataset.weights[test_idx] 
-
-	weights_train_max = torch.max(weights_train)
-	weights_train_min = torch.min(weights_train)
-	dataset.weights[train_idx]  = (weights_train - weights_train_min) / (weights_train_max - weights_train_min)
-	dataset.weights[val_idx] = (weights_val - weights_train_min) / (weights_train_max - weights_train_min)
-	dataset.weights[test_idx] = (weights_test - weights_train_min) / (weights_train_max - weights_train_min)
-
-	sampler_ratings_count = WeightedRandomSampler(dataset.weights[train_idx], len(train_idx))
+	# weights_train = dataset.weights[train_idx] 
+	# weights_val = dataset.weights[val_idx]
+	# weights_test = dataset.weights[test_idx] 
+ 
+	# weights_train_max = torch.max(weights_train)
+	# weights_train_min = torch.min(weights_train)
+	# dataset.weights[train_idx]  = (weights_train - weights_train_min) / (weights_train_max - weights_train_min)
+	# dataset.weights[val_idx] = (weights_val - weights_train_min) / (weights_train_max - weights_train_min)
+	# dataset.weights[test_idx] = (weights_test - weights_train_min) / (weights_train_max - weights_train_min)
+ 
+	# sampler_ratings_count = WeightedRandomSampler(dataset.weights[train_idx], len(train_idx))
 
 	set_reproducibility()
 
@@ -276,9 +276,9 @@ if __name__ == "__main__":
 		train_subset = Subset(dataset, train_idx)
 		val_subset=Subset(dataset, val_idx)
 		test_subset=Subset(dataset, test_idx)
-		train_loader=DataLoader(train_subset, batch_size=batch_size, shuffle=False, sampler=sampler_class_frequency, drop_last=True, num_workers = 1, pin_memory = True)
-		val_loader=DataLoader(val_subset, batch_size=1, shuffle=False, drop_last=True, num_workers = 1, pin_memory = True)
-		test_loader=DataLoader(test_subset, batch_size=1, shuffle=False, drop_last=True, num_workers = 1, pin_memory = True)
+		train_loader=DataLoader(train_subset, batch_size=batch_size, shuffle=False, sampler=sampler_class_frequency, drop_last=True, pin_memory = True)
+		val_loader=DataLoader(val_subset, batch_size=1, shuffle=False, drop_last=True, pin_memory = True)
+		test_loader=DataLoader(test_subset, batch_size=1, shuffle=False, drop_last=True, pin_memory = True)
 
 		model=Feedforward(dataset.X.shape[1], hidden_size, dataset.num_classes, af_first_layer, af_hidden_layers, af_output_layer, num_hidden_layers, dropout)
 		writer.add_graph(model, dataset.X)

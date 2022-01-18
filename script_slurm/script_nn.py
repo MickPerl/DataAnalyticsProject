@@ -20,7 +20,7 @@ import os
 
 class MoviesDataset(Dataset):
     def __init__(self):
-        df = pd.read_csv("script_slurm/df.csv")
+        df = pd.read_csv("df.csv")
         df = self.cleaning(df)
 
         X, y, weights = self.split_XYweights(df)

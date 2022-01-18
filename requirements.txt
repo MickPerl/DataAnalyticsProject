@@ -9,3 +9,4 @@ imbalanced-learn
 jupyter
 plotly
 matplotlib-inline
+tensorboard

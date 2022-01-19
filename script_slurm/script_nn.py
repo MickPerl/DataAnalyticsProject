@@ -1,5 +1,3 @@
-
-# TODO: da fare ancora
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -15,8 +13,11 @@ from torch.utils.tensorboard import SummaryWriter
 from pprint import pprint
 from sklearn.metrics import precision_recall_fscore_support as score
 
-import os
+from torchinfo import summary
+from textwrap import dedent
 
+import os
+import argparse
 
 class MoviesDataset(Dataset):
     def __init__(self):
@@ -59,13 +60,11 @@ class MoviesDataset(Dataset):
         return df
 
     def discretization(self, series):
-        series = pd.cut(series, bins=5, labels=False)
-        return series
-
+        return pd.cut(series, bins=5, labels=False)
 
 
 class Feedforward(nn.Module):
-    def __init__(self, input_size, hidden_size, num_classes, af_first_layer, af_hidden_layers, af_output_layer, num_hidden_layers, dropout):
+    def __init__(self, input_size, hidden_size, num_classes, af_first_layer, af_hidden_layers, af_output_layer, num_hidden_layers, dropout, batch_norm):
         super(Feedforward, self).__init__()
     
         model = [nn.Linear(input_size, hidden_size), af_first_layer]
@@ -94,85 +93,69 @@ class Feedforward(nn.Module):
         return self.model(x)
 
 
+def train_model(model, criterion, optimizer, data_loader, epochs, n_bad_epochs, device, writer):
+	model.train()
+	loss_values = []
+	n_bad_epochs = n_bad_epochs
+	patience = 0
+	min_loss = np.Inf
+	for epoch in range(epochs):
+		losses_current_batch = []
+		for batch_idx, samples in enumerate(data_loader):
+			data, targets = samples[0].to(device), samples[1].to(device)
+			optimizer.zero_grad()
 
-def train_model(model, criterion, optimizer, epochs, data_loader, device):
-    model.train()
-    loss_values = []
-    n_epochs_stop = 3
-    patience = 0
-    early_stop = False
-    min_loss = np.Inf
-    for epoch in range(epochs):
-        losses_current_batch = []
-        for batch_idx, samples in enumerate(data_loader):
-            data, targets = samples[0].to(device), samples[1].to(device)
-            optimizer.zero_grad()
+			# Forward pass
+			y_pred = model(data)
+			# Compute Loss
+			if str(criterion) == "CrossEntropyLoss()":
+				loss = criterion(y_pred, targets)
+			else:	# "KLDivLoss()"
+				targets = torch.nn.functional.one_hot(targets, num_classes=5).float()
+				loss = criterion(y_pred, targets)
 
-            # Forward pass
-            y_pred = model(data)
-            # y_predd = torch.argmax(y_pred, dim=1)
+			writer.add_scalar("Loss/train", loss, epoch * len(data_loader) + batch_idx + 1)
+			loss_values.append(loss.item())
+			losses_current_batch.append(loss.item())
 
-            # Compute Loss
-            loss = criterion(y_pred, targets)
-            writer.add_scalar("Loss/train", loss, epoch * len(data_loader) + batch_idx +1)
-            loss_values.append(loss.item())
-            losses_current_batch.append(loss.item())
+			# Backward pass
+			loss.backward()
+			optimizer.step()
 
-            # Backward pass
-            loss.backward()
-            optimizer.step()
-
-        loss_current_batch = np.mean(losses_current_batch)
+		loss_current_batch = np.mean(losses_current_batch)
 
         # If the validation loss is at a minimum
-        if loss_current_batch < min_loss:
-            # Save the model
-            # torch.save(model)
-            patience = 0
-            min_loss = loss_current_batch
-        else:
-            patience += 1
+		if loss_current_batch < min_loss:
+			# Save the model
+			# torch.save(model)
+			patience = 0
+			min_loss = loss_current_batch
+		else:
+			patience += 1
 
-        print(f"Epoch: {epoch}\t Mean Loss: {loss_current_batch}\t Current min mean loss: {min_loss}")
-        
-        if epoch > 4 and patience > n_epochs_stop:
-            early_stop = True
-            print(f"Early stopped at {epoch}-th epoch, since the mean loss over mini-batches didn't decrease during the last {n_epochs_stop} epochs")
-            break
+		print(f"Epoch: {epoch}\t Mean Loss: {loss_current_batch}\t Current min mean loss: {min_loss}")
 
-    return model, loss_values, epoch
+		if epoch > 4 and patience > n_bad_epochs:
+			print(f"Early stopped at {epoch}-th epoch, since the mean loss over mini-batches didn't decrease during the last {n_bad_epochs} epochs")
+			return model, loss_values, epoch
 
+	return model, loss_values, epoch
 
 
-def evaluate_model(model, data_loader, device):
+
+def test_model(model, data_loader, device, output_dict = False):
 	model.eval()
 	y_pred = []
-	y_val = []	
+	y_test = []
+	
 	for batch_idx, samples in enumerate(data_loader):
 	    data, targets = samples[0].to(device), samples[1].to(device)
 	    y_pred.append(model(data))
-	    y_val.append(targets)
+	    y_test.append(targets)
 	y_pred = torch.stack(y_pred).squeeze()
-	y_val = torch.stack(y_val).squeeze()
+	y_test = torch.stack(y_test).squeeze()
 	y_pred = y_pred.argmax(dim=1, keepdim=True).squeeze()
-	# classification_report(y_val.cpu(), y_pred.cpu(), zero_division=0)
-	report = classification_report(y_val.cpu(), y_pred.cpu(), zero_division=0, output_dict=True)
-	return report
-
-
-def test_model(model, data_loader, device):
-    model.eval()
-    y_pred = []
-    y_test = []
-
-    for batch_idx, samples in enumerate(data_loader):
-        data, targets = samples[0].to(device), samples[1].to(device)
-        y_pred.append(model(data))
-        y_test.append(targets)
-    y_pred = torch.stack(y_pred).squeeze()
-    y_test = torch.stack(y_test).squeeze()
-    y_pred = y_pred.argmax(dim=1, keepdim=True).squeeze()
-    print(classification_report(y_test.cpu(), y_pred.cpu(), zero_division=0))
+	return classification_report(y_test.cpu(), y_pred.cpu(), zero_division=0, output_dict=output_dict)
 
 
 def set_reproducibility(seed = 42):
@@ -187,14 +170,15 @@ print("Device: {}".format(device))
 
 hyperparams = {
 	'num_epochs' : [500],
-	'num_hidden_layers' : [1, 3, 5, 7, 10],
+	'n_bad_epochs': [3],
+	'num_hidden_layers' : [1, 3, 5, 7],
 	'hidden_size' : [8, 16, 32, 64, 128],
-	'batch_size' : [16, 32, 64, 128, 256, 512],
+	'batch_size' : [16, 32, 64, 128, 256],
 	'af_first_layer' : [nn.Tanh(), nn.LeakyReLU()],
 	'af_hidden_layers' : [nn.LeakyReLU()],
-	'af_output_layer' : [None], # [None, nn.Softmax(dim=1)],
-	'loss_function' : [nn.CrossEntropyLoss()], #[nn.CrossEntropyLoss(), nn.KLDivLoss(reduction = 'batchmean')],
-	'dropout' : [0, 0.2, 0.4],
+	'af_output_layer' : [None, nn.LogSoftmax(dim=1)],
+	'loss_function' : [nn.CrossEntropyLoss(), nn.KLDivLoss(reduction = 'batchmean')], 
+	'dropout' : [0, 0.2, 0.5],
 	'batch_norm' : [False, True],
 	'learning_rate' : [0.01, 0.001], 
 	'optimizer': ["torch.optim.SGD", "torch.optim.Adam"]	
@@ -224,11 +208,10 @@ if __name__ == "__main__":
 	dataset.X[test_idx, 2] = (X_test[:,2] - train_title_length_min)/(train_title_length_max - train_title_length_min)
 
 	
-	# Creating samplers to manage unbalancing classes
 	def class_weights(y):
 		class_count = torch.bincount(y)
 		class_weighting = 1. / class_count
-		sample_weights = class_weighting[y]   # sarebbe np.array([weight[t] for t in y_train])
+		sample_weights = class_weighting[y]   # sarebbe np.array([weighting[t] for t in y_train])
 		return sample_weights
 
 	y_train = dataset.y[train_idx]
@@ -237,75 +220,139 @@ if __name__ == "__main__":
 	sampler_class_frequency = WeightedRandomSampler(sample_weights, len(train_idx))
 
 	# MinMaxScaling ratings_count
-	# weights_train = dataset.weights[train_idx] 
-	# weights_val = dataset.weights[val_idx]
-	# weights_test = dataset.weights[test_idx] 
- 
-	# weights_train_max = torch.max(weights_train)
-	# weights_train_min = torch.min(weights_train)
-	# dataset.weights[train_idx]  = (weights_train - weights_train_min) / (weights_train_max - weights_train_min)
-	# dataset.weights[val_idx] = (weights_val - weights_train_min) / (weights_train_max - weights_train_min)
-	# dataset.weights[test_idx] = (weights_test - weights_train_min) / (weights_train_max - weights_train_min)
- 
-	# sampler_ratings_count = WeightedRandomSampler(dataset.weights[train_idx], len(train_idx))
+	#       weights_train = dataset.weights[train_idx] 
+	#       weights_val = dataset.weights[val_idx]
+	#       weights_test = dataset.weights[test_idx] 
+	#       
+	#       weights_train_max = torch.max(weights_train)
+	#       weights_train_min = torch.min(weights_train)
+	#       dataset.weights[train_idx]  = (weights_train - weights_train_min) / (weights_train_max - weights_train_min)
+	#       dataset.weights[val_idx] = (weights_val - weights_train_min) / (weights_train_max - weights_train_min)
+	#       dataset.weights[test_idx] = (weights_test - weights_train_min) / (weights_train_max - weights_train_min)
+	#       
+	#       sampler_ratings_count = WeightedRandomSampler(dataset.weights[train_idx], len(train_idx))
+
+	def dict_configs_from_params_cartesian_product(hyperparams) :
+		name_params = list(hyperparams.keys())
+		cartesian_product_filtered = []
+		cartesian_product_config_params = itertools.product(*hyperparams.values())
+
+		for conf_params in cartesian_product_config_params:
+			conf_params_dict = {name_params[i]: conf_params[i] for i in range(len(hyperparams))}
+			
+			if conf_params_dict['batch_norm'] and conf_params_dict['batch_size'] < 32 : # non ha significatività statistica
+				# Skipped config with batch_size < 32 and batch norm, since batches aren't statistically significant.
+				continue
+
+			if str(conf_params_dict['loss_function']) == "CrossEntropyLoss()" and conf_params_dict['af_output_layer'] != None:
+				# Skipped config with CrossEntropy as loss function and whichever activation function in the output layer,
+				# since CrossEntropy always contains SoftMax as activation function of output layer.
+				continue
+
+			if str(conf_params_dict['loss_function']) == "KLDivLoss()" and str(conf_params_dict['af_output_layer']) != "LogSoftmax(dim=1)":
+				# Skipped config with Kullback-Leibler divergence as loss function and whichever activation function
+				# in the output layer other than SoftMax: since Kullback-Leibler divergence works with probability
+				# distributions, it's suitable the SoftMax as the activation function of the output layer in that it
+				# returns a probability distribution over classes for each feature vector in input.
+				continue
+			
+			if conf_params_dict['dropout'] == 0.5 and conf_params_dict['hidden_size'] < 64 :
+				continue
+
+			if conf_params_dict['dropout'] == 0.2 and conf_params_dict['hidden_size'] > 32 :
+				continue
+
+			cartesian_product_filtered.append(conf_params_dict)
+		
+		return cartesian_product_filtered
+
+	def split_configs_params(dict_configs, nr_sets = 4):
+		assert len(dict_configs) % nr_sets == 0,  "The number of configs params sets have to be a dividend of the cardinality of all configs."
+		print(f"Newly created sets (ratio {nr_sets}:1 to all {len(dict_configs)} configs):")
+
+		for i in range(nr_sets):
+			globals()[f"configs_set{i}"] = np.array_split(dict_configs, nr_sets)[i]
+			print(f"configs_set{i}")
+	
+
+	parser = argparse.ArgumentParser()
+	parser.add_argument("--nr_sets",
+	                    default=6,
+	                    type=int,
+	                    help="The number of sets all configurations are splitted in")
+	parser.add_argument("--idx_set",
+						default=0,
+	                    type=int,
+	                    help="The index of the desidered set")
+
+	args = parser.parse_args()
+
+	assert args.idx_set < args.nr_sets, f"You can specify a set with an index until {args.nr_sets-1}"
+
+	all_configs = dict_configs_from_params_cartesian_product(hyperparams)
+	split_configs_params(all_configs, args.nr_sets)
+
+	config_set = eval(f"configs_set{args.idx_set}")
 
 	set_reproducibility()
 
-	nr_train = 0
-	*names, = hyperparams
-	columns = ["nr_train"] + names + ["epoch_stopped", "loss", "accuracy", "precision", "recall", "f1_score", "support"]
+	nr_train = len(configs_set0) * args.idx_set
+	columns = ["nr_train"] + list(all_configs[0].keys()) + ["epoch_stopped", "loss", "accuracy", "precision", "recall", "f1_score", "support"]
 	results = pd.DataFrame(columns=columns)
 
-	for config_params in itertools.product(*hyperparams.values()):
-		for param in range(len(hyperparams)):
-			globals()[names[param]] = config_params[param]
-
-		if batch_norm and batch_size < 32 : # non ha significatività statistica
-			continue
-
-		if loss_function == nn.CrossEntropyLoss() and af_output_layer != None:	# quando c'è crossentropy, nessuna funzione di attivazione
-			continue
+	for config_params in config_set:	
 
 		nr_train += 1
 		print(f"{nr_train}° training with params:")
-		for param in range(len(hyperparams)):
-			print(f"-- {names[param]}: {config_params[param]}")
+		pprint(config_params)
 
-		writer = SummaryWriter(log_dir=os.path.join("tensorboard_logs", "Train n. " + str(nr_train) + " --> " + " - ".join(map(str, config_params))))
+		name_run = '__'.join(map(str, config_params))
+		writer = SummaryWriter(log_dir=os.path.join('tensorboard_logs', f"{args.idx_set}_out_of_{args.nr_sets - 0}", 'Train_' + str(nr_train), name_run))
 		
 		train_subset = Subset(dataset, train_idx)
 		val_subset=Subset(dataset, val_idx)
 		test_subset=Subset(dataset, test_idx)
-		train_loader=DataLoader(train_subset, batch_size=batch_size, shuffle=False, sampler=sampler_class_frequency, drop_last=True, pin_memory = True)
-		val_loader=DataLoader(val_subset, batch_size=1, shuffle=False, drop_last=True, pin_memory = True)
-		test_loader=DataLoader(test_subset, batch_size=1, shuffle=False, drop_last=True, pin_memory = True)
+		train_loader=DataLoader(train_subset, batch_size=config_params['batch_size'], shuffle=False, sampler=sampler_class_frequency, drop_last=True)
+		val_loader=DataLoader(val_subset, batch_size=1, shuffle=False, drop_last=True)
+		test_loader=DataLoader(test_subset, batch_size=1, shuffle=False, drop_last=True)
 
-		model=Feedforward(dataset.X.shape[1], hidden_size, dataset.num_classes, af_first_layer, af_hidden_layers, af_output_layer, num_hidden_layers, dropout)
-		writer.add_graph(model, dataset.X)
+		model = Feedforward(
+			dataset.X.shape[1],
+			config_params['hidden_size'],
+			dataset.num_classes,
+			config_params['af_first_layer'],
+			config_params['af_hidden_layers'],
+			config_params['af_output_layer'],
+			config_params['num_hidden_layers'],
+			config_params['dropout'], 
+			config_params['batch_norm'])
+		writer.add_graph(model, dataset.X[train_idx])
 		model.to(device)
-		# evaluate_model(model, val_loader, device)
+		summary(model, input_size=(config_params['batch_size'], int(35850 / config_params['batch_size']), 1149), col_names= ["input_size","output_size", "num_params"], verbose=1)
+		# dataset.X[train_idx].shape[1] == 1149, dataset.X[train_idx].shape[0] == 35850			provare verbose = 2 per weight e bias
+		# test_model(model, val_loader, device)
 
+		loss_func = config_params['loss_function'] 
 
-		model, loss_values, epoch_stopped = train_model(model, loss_function, eval(optimizer + "(model.parameters(), lr=learning_rate)"), num_epochs, train_loader, device)
+		optim = eval(config_params['optimizer'] + "(model.parameters(), lr=config_params['learning_rate'])")
+		model, loss_values, epoch_stopped = train_model(model, loss_func, optim, train_loader, config_params['num_epochs'], config_params['n_bad_epochs'], device, writer)
 		print(f"Loss: {loss_values[-1]}", end="\n\n")
 		writer.flush()
 		writer.close()
 
-		report = evaluate_model(model, val_loader, device)
+		report = test_model(model, val_loader, device, True)
 		index_classes = len(report) - 3
 		f1_score = [report[str(i)]['f1-score'] for i in range(index_classes)]
 		precision = [report[str(i)]['precision'] for i in range(index_classes)]
 		recall = [report[str(i)]['recall'] for i in range(index_classes)]
 		support = [report[str(i)]['support'] for i in range(index_classes)]
 		accuracy = report['accuracy']
-		row_values= [nr_train] + list(map(str, config_params)) + [epoch_stopped, loss_values[-1], accuracy, precision, recall, f1_score, support]
+		row_values= [nr_train] + \
+			list(config_params.values()) + \
+			[epoch_stopped, loss_values[-1], accuracy, precision, recall, f1_score, support]
 		results=results.append(pd.Series(row_values, index=columns), ignore_index=True)
-		# plt.plot(loss_values)
-		# plt.title("Number of epochs: {}".format(num_epochs))
-		# plt.show()
 
+
+
+	results.to_csv(f"results_nrSets{args.nr_sets}_idxSet{args.idx_set}.csv", index=False)
 	
-
-	results.to_csv("results.csv", index=False)
-
-

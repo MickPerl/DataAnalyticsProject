@@ -173,6 +173,7 @@ pip-selfcheck.json
 
 .vscode/*
 !.vscode/settings.json
+.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
@@ -189,3 +190,4 @@ images/
 *.csv
 *.png
 tensorboard_logs
+

@@ -12,4 +12,4 @@ source ../venv/bin/activate
 
 pip install --no-cache-dir -r ../requirements.txt
 
-python3 -u script_nn.py
+python3 -u script_nn.py  --nr_sets 6 --idx_set 1

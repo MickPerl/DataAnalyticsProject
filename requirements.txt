@@ -10,3 +10,5 @@ jupyter
 plotly
 matplotlib-inline
 tensorboard
+torchinfo
+textwrapper

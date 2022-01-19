@@ -328,7 +328,7 @@ if __name__ == "__main__":
 			config_params['batch_norm'])
 		writer.add_graph(model, dataset.X[train_idx])
 		model.to(device)
-		summary(model, input_size=(config_params['batch_size'], int(35850 / config_params['batch_size']), 1149), col_names= ["input_size","output_size", "num_params"], verbose=1)
+		summary(model, input_size=(config_params['batch_size'], int(len(config_set) / config_params['batch_size']), 1149), col_names= ["input_size","output_size", "num_params"], verbose=1)
 		# dataset.X[train_idx].shape[1] == 1149, dataset.X[train_idx].shape[0] == 35850			provare verbose = 2 per weight e bias
 		# test_model(model, val_loader, device)
 

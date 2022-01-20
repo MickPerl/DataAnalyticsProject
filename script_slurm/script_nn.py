@@ -270,7 +270,7 @@ if __name__ == "__main__":
 
 
 	hyperparams = {
-		'num_epochs' : [2],
+		'num_epochs' : [500],
 		'n_bad_epochs': [3],
 		'num_hidden_layers' : [1, 3, 5, 7],
 		'hidden_size' : [8, 16, 32, 64, 128],

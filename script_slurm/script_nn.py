@@ -386,9 +386,6 @@ if __name__ == "__main__":
 			input_model = dataset.X[train_idx][:config_params['batch_size']].to(device)
 			tb.add_graph(model, input_model)
 
-			summary(model, input_size=(config_params['batch_size'], int(35850 // config_params['batch_size']), 1149), col_names= ["input_size","output_size", "num_params"], verbose=1)
-			# dataset.X[train_idx].shape[1] == 1149, dataset.X[train_idx].shape[0] == 35850			provare verbose = 2 per weight e bias
-			# test_model(model, val_loader, device)
 
 			loss_func = config_params['loss_function'] 
 

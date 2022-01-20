@@ -115,15 +115,13 @@ def train_model(model, criterion, optimizer, data_loader, epochs, n_bad_epochs, 
 			data, targets = samples[0].to(device), samples[1].to(device)
 			optimizer.zero_grad()
 
-			# Forward pass
-			
 			y_pred = model(data)
 			# Compute Loss
 			if str(criterion) == "CrossEntropyLoss()":
 				loss = criterion(y_pred, targets)
 			else:	# "KLDivLoss()"
-				targets = torch.nn.functional.one_hot(targets, num_classes=5).float()
-				loss = criterion(y_pred, targets)
+				targets_one_hot_encoded = torch.nn.functional.one_hot(targets, num_classes=5).float()
+				loss = criterion(y_pred, targets_one_hot_encoded)
 
 			correct = get_num_correct(y_pred, targets)
 			

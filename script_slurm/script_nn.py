@@ -10,6 +10,7 @@ torch.backends.cudnn.benchmark = False
 from torch.utils.data.sampler import WeightedRandomSampler
 from torch.utils.data import Dataset, DataLoader, Subset, TensorDataset
 from torch.utils.tensorboard import SummaryWriter
+from torch.utils.tensorboard.summary import hparams
 from pprint import pprint
 from sklearn.metrics import precision_recall_fscore_support as score
 
@@ -93,19 +94,29 @@ class Feedforward(nn.Module):
         return self.model(x)
 
 
-def train_model(model, criterion, optimizer, data_loader, epochs, n_bad_epochs, device, writer):
+def get_num_correct(preds, labels):
+    return preds.argmax(dim=1).eq(labels).sum().item()
+
+def train_model(model, criterion, optimizer, data_loader, epochs, n_bad_epochs, device, tb):
 	model.train()
-	loss_values = []
+
+	loss_values = []	# to store loss values over all batches regardless distinct epochs: it's the list we return after training
+
 	n_bad_epochs = n_bad_epochs
 	patience = 0
 	min_loss = np.Inf
+
+
 	for epoch in range(epochs):
-		losses_current_batch = []
+		losses_batches_current_epoch = []	# to store loss values over all batches with regard to a single epoch to checking condition about early stopping
+		correct_batches_current_epoch = []
+		
 		for batch_idx, samples in enumerate(data_loader):
 			data, targets = samples[0].to(device), samples[1].to(device)
 			optimizer.zero_grad()
 
 			# Forward pass
+			
 			y_pred = model(data)
 			# Compute Loss
 			if str(criterion) == "CrossEntropyLoss()":
@@ -114,32 +125,60 @@ def train_model(model, criterion, optimizer, data_loader, epochs, n_bad_epochs, 
 				targets = torch.nn.functional.one_hot(targets, num_classes=5).float()
 				loss = criterion(y_pred, targets)
 
-			writer.add_scalar("Loss/train", loss, epoch * len(data_loader) + batch_idx + 1)
+			correct = get_num_correct(y_pred, targets)
+			
+			tb.add_scalar("Loss every batch", loss, epoch * len(data_loader) + batch_idx + 1)
+			tb.add_scalar("Correct every batch", correct, epoch * len(data_loader) + batch_idx + 1)
+			tb.add_scalar("Accuracy every batch", correct / len(data), epoch * len(data_loader) + batch_idx + 1)
+
 			loss_values.append(loss.item())
-			losses_current_batch.append(loss.item())
+			losses_batches_current_epoch.append(loss.item())
+			correct_batches_current_epoch.append(correct)
 
 			# Backward pass
 			loss.backward()
 			optimizer.step()
+			
+			# for tag, value in model.named_parameters():
+			# 	tag = tag.replace('.', '/')
+			# 	tb.add_histogram('every batch_' + tag, value.data.cpu().detach().numpy(), batch_idx + 1)
+			# 	tb.add_histogram('every batch_' + tag + '/grad', value.grad.data.cpu().numpy(), batch_idx + 1)
 
-		loss_current_batch = np.mean(losses_current_batch)
+
+		total_loss_current_epoch = np.sum(losses_batches_current_epoch)
+		tb.add_scalar("Loss every epoch", total_loss_current_epoch, epoch)
+		
+		total_correct_current_epoch = np.sum(correct_batches_current_epoch)
+		tb.add_scalar("Correct every epoch", total_correct_current_epoch, epoch)
+
+		accuracy_current_epoch = total_correct_current_epoch / len(X_train)
+		tb.add_scalar("Accuracy every epoch", accuracy_current_epoch, epoch)
+
+		for tag, value in model.named_parameters():
+			tag = tag.replace('.', '/')
+			tb.add_histogram('every epoch_' + tag, value.data.cpu().detach().numpy(), epoch)
+			tb.add_histogram('every epoch_' + tag + '/grad', value.grad.data.cpu().numpy(), epoch)
+
+		mean_loss_current_epoch = np.mean(losses_batches_current_epoch)
 
         # If the validation loss is at a minimum
-		if loss_current_batch < min_loss:
+		if mean_loss_current_epoch < min_loss:
 			# Save the model
 			# torch.save(model)
 			patience = 0
-			min_loss = loss_current_batch
+			min_loss = mean_loss_current_epoch
 		else:
 			patience += 1
 
-		print(f"Epoch: {epoch}\t Mean Loss: {loss_current_batch}\t Current min mean loss: {min_loss}")
+		print(f"Epoch: {epoch}\t Total loss: {total_loss_current_epoch}\t Mean Loss: {mean_loss_current_epoch}\t Current min mean loss: {min_loss}")
 
 		if epoch > 4 and patience > n_bad_epochs:
 			print(f"Early stopped at {epoch}-th epoch, since the mean loss over mini-batches didn't decrease during the last {n_bad_epochs} epochs")
-			return model, loss_values, epoch
+			return model, loss_values, epoch, total_loss_current_epoch, accuracy_current_epoch # loss_values_every_epoch, accuracy_every_epoch
+			# At the return moment,
+			# 		total_loss_current_epoch is the loss value of the last epoch
 
-	return model, loss_values, epoch
+	return model, loss_values, epoch, total_loss_current_epoch, accuracy_current_epoch
 
 
 
@@ -164,28 +203,91 @@ def set_reproducibility(seed = 42):
 	os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
 	torch.use_deterministic_algorithms(True)
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-print("Device: {}".format(device))
+class SummaryWriter(SummaryWriter):
 
+	def add_hparams(self, hparam_dict, metric_dict):
+		torch._C._log_api_usage_once("tensorboard.logging.add_hparams")
+		if type(hparam_dict) is not dict or type(metric_dict) is not dict:
+			raise TypeError('hparam_dict and metric_dict should be dictionary.')
+		exp, ssi, sei = hparams(hparam_dict, metric_dict)
 
-hyperparams = {
-	'num_epochs' : [500],
-	'n_bad_epochs': [3],
-	'num_hidden_layers' : [1, 3, 5, 7],
-	'hidden_size' : [8, 16, 32, 64, 128],
-	'batch_size' : [16, 32, 64, 128, 256],
-	'af_first_layer' : [nn.Tanh(), nn.LeakyReLU()],
-	'af_hidden_layers' : [nn.LeakyReLU()],
-	'af_output_layer' : [None, nn.LogSoftmax(dim=1)],
-	'loss_function' : [nn.CrossEntropyLoss(), nn.KLDivLoss(reduction = 'batchmean')], 
-	'dropout' : [0, 0.2, 0.5],
-	'batch_norm' : [False, True],
-	'learning_rate' : [0.01, 0.001], 
-	'optimizer': ["torch.optim.SGD", "torch.optim.Adam"]	
-}
+		self.file_writer.add_summary(exp)
+		self.file_writer.add_summary(ssi)
+		self.file_writer.add_summary(sei)
+		for k, v in metric_dict.items():
+			if v is not None:
+				self.add_scalar(k, v)
 
+def class_weights(y):
+	class_count = torch.bincount(y)
+	class_weighting = 1. / class_count
+	sample_weights = class_weighting[y]   # sarebbe np.array([weighting[t] for t in y_train])
+	return sample_weights
+
+def dict_configs_from_params_cartesian_product(hyperparams) :
+	name_params = list(hyperparams.keys())
+	cartesian_product_filtered = []
+	cartesian_product_config_params = itertools.product(*hyperparams.values())
+
+	for conf_params in cartesian_product_config_params:
+		conf_params_dict = {name_params[i]: conf_params[i] for i in range(len(hyperparams))}
+		
+		if conf_params_dict['batch_norm'] and conf_params_dict['batch_size'] < 32 : # non ha significatività statistica
+			# Skipped config with batch_size < 32 and batch norm, since batches aren't statistically significant.
+			continue
+
+		if str(conf_params_dict['loss_function']) == "CrossEntropyLoss()" and conf_params_dict['af_output_layer'] != None:
+			# Skipped config with CrossEntropy as loss function and whichever activation function in the output layer,
+			# since CrossEntropy always contains SoftMax as activation function of output layer.
+			continue
+
+		if str(conf_params_dict['loss_function']) == "KLDivLoss()" and str(conf_params_dict['af_output_layer']) != "LogSoftmax(dim=1)":
+			# Skipped config with Kullback-Leibler divergence as loss function and whichever activation function
+			# in the output layer other than SoftMax: since Kullback-Leibler divergence works with probability
+			# distributions, it's suitable the SoftMax as the activation function of the output layer in that it
+			# returns a probability distribution over classes for each feature vector in input.
+			continue
+		
+		if conf_params_dict['dropout'] == 0.5 and conf_params_dict['hidden_size'] < 64 :
+			continue
+
+		if conf_params_dict['dropout'] == 0.2 and conf_params_dict['hidden_size'] > 32 :
+			continue
+
+		cartesian_product_filtered.append(conf_params_dict)
+	
+	return cartesian_product_filtered
+
+def split_configs_params(dict_configs, nr_sets = 4):
+	assert len(dict_configs) % nr_sets == 0,  "The number of configs params sets have to be a dividend of the cardinality of all configs."
+	print(f"Newly created sets (ratio {nr_sets}:1 to all {len(dict_configs)} configs):")
+
+	for i in range(nr_sets):
+		globals()[f"configs_set{i}"] = np.array_split(dict_configs, nr_sets)[i]
+		print(f"configs_set{i}")
 
 if __name__ == "__main__":
+	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+	print("Device: {}".format(device))
+
+
+	hyperparams = {
+		'num_epochs' : [2],
+		'n_bad_epochs': [3],
+		'num_hidden_layers' : [1, 3, 5, 7],
+		'hidden_size' : [8, 16, 32, 64, 128],
+		'batch_size' : [16, 32, 64, 128, 256],
+		'af_first_layer' : [nn.Tanh(), nn.LeakyReLU()],
+		'af_hidden_layers' : [nn.LeakyReLU()],
+		'af_output_layer' : [None, nn.LogSoftmax(dim=1)],
+		'loss_function' : [nn.CrossEntropyLoss(), nn.KLDivLoss(reduction = 'batchmean')], 
+		'dropout' : [0, 0.2, 0.5],
+		'batch_norm' : [False, True],
+		'learning_rate' : [0.01, 0.001], 
+		'optimizer': ["torch.optim.SGD", "torch.optim.Adam"]	
+	}
+
+
 	dataset = MoviesDataset()
 	train_idx, test_idx = train_test_split(np.arange(len(dataset)), test_size=0.2, stratify=dataset.y, random_state=42)
 	train_idx, val_idx = train_test_split(train_idx, test_size=0.1, stratify=dataset.y[train_idx], random_state=42)
@@ -207,73 +309,11 @@ if __name__ == "__main__":
 	dataset.X[val_idx, 2] = (X_val[:,2] - train_title_length_min)/(train_title_length_max - train_title_length_min)
 	dataset.X[test_idx, 2] = (X_test[:,2] - train_title_length_min)/(train_title_length_max - train_title_length_min)
 
-	
-	def class_weights(y):
-		class_count = torch.bincount(y)
-		class_weighting = 1. / class_count
-		sample_weights = class_weighting[y]   # sarebbe np.array([weighting[t] for t in y_train])
-		return sample_weights
-
 	y_train = dataset.y[train_idx]
 
 	sample_weights = class_weights(y_train)
 	sampler_class_frequency = WeightedRandomSampler(sample_weights, len(train_idx))
 
-	# MinMaxScaling ratings_count
-	#       weights_train = dataset.weights[train_idx] 
-	#       weights_val = dataset.weights[val_idx]
-	#       weights_test = dataset.weights[test_idx] 
-	#       
-	#       weights_train_max = torch.max(weights_train)
-	#       weights_train_min = torch.min(weights_train)
-	#       dataset.weights[train_idx]  = (weights_train - weights_train_min) / (weights_train_max - weights_train_min)
-	#       dataset.weights[val_idx] = (weights_val - weights_train_min) / (weights_train_max - weights_train_min)
-	#       dataset.weights[test_idx] = (weights_test - weights_train_min) / (weights_train_max - weights_train_min)
-	#       
-	#       sampler_ratings_count = WeightedRandomSampler(dataset.weights[train_idx], len(train_idx))
-
-	def dict_configs_from_params_cartesian_product(hyperparams) :
-		name_params = list(hyperparams.keys())
-		cartesian_product_filtered = []
-		cartesian_product_config_params = itertools.product(*hyperparams.values())
-
-		for conf_params in cartesian_product_config_params:
-			conf_params_dict = {name_params[i]: conf_params[i] for i in range(len(hyperparams))}
-			
-			if conf_params_dict['batch_norm'] and conf_params_dict['batch_size'] < 32 : # non ha significatività statistica
-				# Skipped config with batch_size < 32 and batch norm, since batches aren't statistically significant.
-				continue
-
-			if str(conf_params_dict['loss_function']) == "CrossEntropyLoss()" and conf_params_dict['af_output_layer'] != None:
-				# Skipped config with CrossEntropy as loss function and whichever activation function in the output layer,
-				# since CrossEntropy always contains SoftMax as activation function of output layer.
-				continue
-
-			if str(conf_params_dict['loss_function']) == "KLDivLoss()" and str(conf_params_dict['af_output_layer']) != "LogSoftmax(dim=1)":
-				# Skipped config with Kullback-Leibler divergence as loss function and whichever activation function
-				# in the output layer other than SoftMax: since Kullback-Leibler divergence works with probability
-				# distributions, it's suitable the SoftMax as the activation function of the output layer in that it
-				# returns a probability distribution over classes for each feature vector in input.
-				continue
-			
-			if conf_params_dict['dropout'] == 0.5 and conf_params_dict['hidden_size'] < 64 :
-				continue
-
-			if conf_params_dict['dropout'] == 0.2 and conf_params_dict['hidden_size'] > 32 :
-				continue
-
-			cartesian_product_filtered.append(conf_params_dict)
-		
-		return cartesian_product_filtered
-
-	def split_configs_params(dict_configs, nr_sets = 4):
-		assert len(dict_configs) % nr_sets == 0,  "The number of configs params sets have to be a dividend of the cardinality of all configs."
-		print(f"Newly created sets (ratio {nr_sets}:1 to all {len(dict_configs)} configs):")
-
-		for i in range(nr_sets):
-			globals()[f"configs_set{i}"] = np.array_split(dict_configs, nr_sets)[i]
-			print(f"configs_set{i}")
-	
 
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--nr_sets",
@@ -296,7 +336,21 @@ if __name__ == "__main__":
 
 	set_reproducibility()
 
-	nr_train = len(configs_set0) * args.idx_set
+	if config_set == all_configs:
+		nr_train = 0
+	else :
+		nr_train = len(configs_set0) * args.idx_set
+
+	columns = ["nr_train"] + list(all_configs[0].keys()) + ["epoch_stopped", "loss", "accuracy", "precision", "recall", "f1_score", "support"]
+	results = pd.DataFrame(columns=columns)
+	
+	set_reproducibility()	
+
+	if config_set == all_configs:
+		nr_train = 0
+	else :
+		nr_train = len(configs_set0) * args.idx_set
+		
 	columns = ["nr_train"] + list(all_configs[0].keys()) + ["epoch_stopped", "loss", "accuracy", "precision", "recall", "f1_score", "support"]
 	results = pd.DataFrame(columns=columns)
 
@@ -306,53 +360,69 @@ if __name__ == "__main__":
 		print(f"{nr_train}° training with params:")
 		pprint(config_params)
 
-		name_run = '__'.join(map(str, config_params))
-		writer = SummaryWriter(log_dir=os.path.join('tensorboard_logs', f"{args.idx_set}_out_of_{args.nr_sets - 0}", 'Train_' + str(nr_train), name_run))
-		
-		train_subset = Subset(dataset, train_idx)
-		val_subset=Subset(dataset, val_idx)
-		test_subset=Subset(dataset, test_idx)
-		train_loader=DataLoader(train_subset, batch_size=config_params['batch_size'], shuffle=False, sampler=sampler_class_frequency, drop_last=True)
-		val_loader=DataLoader(val_subset, batch_size=1, shuffle=False, drop_last=True)
-		test_loader=DataLoader(test_subset, batch_size=1, shuffle=False, drop_last=True)
+		list_params_config = list(map(str, list(config_params.values())))
+		name_run = '__'.join(list_params_config)
+		with SummaryWriter(log_dir=os.path.join('tensorboard_logs', f"{args.idx_set}_out_of_{args.nr_sets - 1}", 'Train_' + str(nr_train), name_run)) as tb:
 
-		model = Feedforward(
-			dataset.X.shape[1],
-			config_params['hidden_size'],
-			dataset.num_classes,
-			config_params['af_first_layer'],
-			config_params['af_hidden_layers'],
-			config_params['af_output_layer'],
-			config_params['num_hidden_layers'],
-			config_params['dropout'], 
-			config_params['batch_norm'])
-		writer.add_graph(model, dataset.X[train_idx])
-		model.to(device)
-		# summary(model, input_size=(config_params['batch_size'], int(len(config_set) / config_params['batch_size']), 1149), col_names= ["input_size","output_size", "num_params"], verbose=1)
-		# dataset.X[train_idx].shape[1] == 1149, dataset.X[train_idx].shape[0] == 35850			provare verbose = 2 per weight e bias
-		# test_model(model, val_loader, device)
+			train_subset = Subset(dataset, train_idx)
+			val_subset=Subset(dataset, val_idx)
+			test_subset=Subset(dataset, test_idx)
+			train_loader=DataLoader(train_subset, batch_size=config_params['batch_size'], shuffle=False, sampler=sampler_class_frequency, drop_last=True)
+			val_loader=DataLoader(val_subset, batch_size=1, shuffle=False, drop_last=True)
+			test_loader=DataLoader(test_subset, batch_size=1, shuffle=False, drop_last=True)
 
-		loss_func = config_params['loss_function'] 
+			model = Feedforward(
+				dataset.X.shape[1],
+				config_params['hidden_size'],
+				dataset.num_classes,
+				config_params['af_first_layer'],
+				config_params['af_hidden_layers'],
+				config_params['af_output_layer'],
+				config_params['num_hidden_layers'],
+				config_params['dropout'], 
+				config_params['batch_norm'])
 
-		optim = eval(config_params['optimizer'] + "(model.parameters(), lr=config_params['learning_rate'])")
-		model, loss_values, epoch_stopped = train_model(model, loss_func, optim, train_loader, config_params['num_epochs'], config_params['n_bad_epochs'], device, writer)
-		print(f"Loss: {loss_values[-1]}", end="\n\n")
-		writer.flush()
-		writer.close()
+			model.to(device)
+			input_model = dataset.X[train_idx][:config_params['batch_size']].to(device)
+			tb.add_graph(model, input_model)
 
-		report = test_model(model, val_loader, device, True)
-		index_classes = len(report) - 3
-		f1_score = [report[str(i)]['f1-score'] for i in range(index_classes)]
-		precision = [report[str(i)]['precision'] for i in range(index_classes)]
-		recall = [report[str(i)]['recall'] for i in range(index_classes)]
-		support = [report[str(i)]['support'] for i in range(index_classes)]
-		accuracy = report['accuracy']
-		row_values= [nr_train] + \
-			list(config_params.values()) + \
-			[epoch_stopped, loss_values[-1], accuracy, precision, recall, f1_score, support]
-		results=results.append(pd.Series(row_values, index=columns), ignore_index=True)
+			summary(model, input_size=(config_params['batch_size'], int(35850 // config_params['batch_size']), 1149), col_names= ["input_size","output_size", "num_params"], verbose=1)
+			# dataset.X[train_idx].shape[1] == 1149, dataset.X[train_idx].shape[0] == 35850			provare verbose = 2 per weight e bias
+			# test_model(model, val_loader, device)
 
+			loss_func = config_params['loss_function'] 
+
+			optim = eval(config_params['optimizer'] + "(model.parameters(), lr=config_params['learning_rate'])")
+			model, loss_values, epoch_stopped, loss_value_last_epoch, accuracy_last_epoch = train_model(model, loss_func, optim, train_loader, config_params['num_epochs'], config_params['n_bad_epochs'], device, tb)
+			
+			print(f"Loss: {loss_value_last_epoch}", end="\n\n")
+
+			report = test_model(model, val_loader, device, True)
+			index_classes = len(report) - 3
+			f1_score = [report[str(i)]['f1-score'] for i in range(index_classes)]
+			precision = [report[str(i)]['precision'] for i in range(index_classes)]
+			recall = [report[str(i)]['recall'] for i in range(index_classes)]
+			support = [report[str(i)]['support'] for i in range(index_classes)]
+			accuracy = report['accuracy']
 
 
-	results.to_csv(f"results_nrSets{args.nr_sets}_idxSet{args.idx_set}.csv", index=False)
+			row_values= [nr_train] + list_params_config + [epoch_stopped, loss_value_last_epoch, accuracy, precision, recall, f1_score, support]
+			results=results.append(pd.Series(row_values, index=columns), ignore_index=True)
+			# plt.plot(loss_values)
+			# plt.title("Number of epochs: {}".format(num_epochs))
+			# plt.show()
+
+			dict_params_config = {list(config_params.keys())[z]: list_params_config[z] for z in range(len(config_params))}
+			tb.add_hparams(hparam_dict = dict_params_config, metric_dict = {"Accuracy every epoch": None, "Loss every epoch": None})
+			tb.flush()
+			tb.close()
+		del model, optim, train_loader, val_loader
+	
+
+	if config_set == all_configs:
+		results.to_csv("results.csv", index=False)
+	else :
+		results.to_csv(f"results_nrSets{args.nr_sets}_idxSet{args.idx_set}.csv", index=False)
+	
+	torch.cuda.empty_cache()
 	

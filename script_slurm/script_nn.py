@@ -159,10 +159,10 @@ def train_model(model, criterion, optimizer, data_loader, epochs, n_bad_epochs, 
 
 			optimizer.step()
 			
-			# for tag, value in model.named_parameters():
-			# 	tag = tag.replace('.', '/')
-			# 	tb.add_histogram('every batch_' + tag, value.data.cpu().detach().numpy(), batch_idx + 1)
-			# 	tb.add_histogram('every batch_' + tag + '/grad', value.grad.data.cpu().numpy(), batch_idx + 1)
+			for tag, value in model.named_parameters():
+				tag = tag.replace('.', '/')
+				tb.add_histogram('every batch_' + tag, value.data.cpu().detach().numpy(), batch_idx + 1)
+				tb.add_histogram('every batch_' + tag + '/grad', value.grad.data.cpu().numpy(), batch_idx + 1)
 
 
 		total_loss_current_epoch = np.sum(losses_batches_current_epoch)

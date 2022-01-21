@@ -396,10 +396,10 @@ if __name__ == "__main__":
 
 			train_subset = Subset(dataset, train_idx)
 			val_subset=Subset(dataset, val_idx)
-			test_subset=Subset(dataset, test_idx)
+			#test_subset=Subset(dataset, test_idx)
 			train_loader=DataLoader(train_subset, batch_size=config_params['batch_size'], shuffle=False, sampler=sampler_class_frequency, drop_last=True)
 			val_loader=DataLoader(val_subset, batch_size=1, shuffle=False, drop_last=True)
-			test_loader=DataLoader(test_subset, batch_size=1, shuffle=False, drop_last=True)
+			#test_loader=DataLoader(test_subset, batch_size=1, shuffle=False, drop_last=True)
 
 			model = Feedforward(
 				dataset.X.shape[1],
@@ -413,8 +413,8 @@ if __name__ == "__main__":
 				config_params['batch_norm'])
 
 			model.to(device)
-			input_model = dataset.X[train_idx][:config_params['batch_size']].to(device)
-			tb.add_graph(model, input_model)
+			# input_model = dataset.X[train_idx][:config_params['batch_size']].to(device)
+			# tb.add_graph(model, input_model)
 
 
 			loss_func = config_params['loss_function'] 

@@ -97,10 +97,12 @@ class Feedforward(nn.Module):
 def get_num_correct(preds, labels):
     return preds.argmax(dim=1).eq(labels).sum().item()
 
-def train_model(model, criterion, optimizer, data_loader, epochs, n_bad_epochs, device, tb):
+def train_model(model, criterion, optimizer, data_loader, epochs, n_bad_epochs, device, tb, cardinality_training_set):
 	model.train()
 
 	loss_values = []	# to store loss values over all batches regardless distinct epochs: it's the list we return after training
+	# loss_values_every_epoch = []
+	# accuracy_every_epoch = []
 
 	n_bad_epochs = n_bad_epochs
 	patience = 0
@@ -115,6 +117,8 @@ def train_model(model, criterion, optimizer, data_loader, epochs, n_bad_epochs, 
 			data, targets = samples[0].to(device), samples[1].to(device)
 			optimizer.zero_grad()
 
+			# Forward pass
+			
 			y_pred = model(data)
 			# Compute Loss
 			if str(criterion) == "CrossEntropyLoss()":
@@ -135,6 +139,24 @@ def train_model(model, criterion, optimizer, data_loader, epochs, n_bad_epochs, 
 
 			# Backward pass
 			loss.backward()
+
+			# Looking for batch containing bad samples which cause inf/nan gradients or loss:
+			# ideally, this samples should to be removed, but in this case we want only automatically
+			# skip them and continue training.
+			valid_gradients = True
+			for name, param in model.named_parameters():
+				if param.grad is not None:
+					if torch.isnan(param.grad).any():
+						print(f"{name} is nan, so model parameters are not going to be updated: this batch is skipped and the gradient is reset.")
+						optimizer.zero_grad()
+						valid_gradients = False
+					if torch.isinf(param.grad).any():
+						print(f"{name} is inf, so model parameters are not going to be updated: this batch is skipped and the gradient is reset.")
+						optimizer.zero_grad()
+						valid_gradients = False
+			if not valid_gradients :
+				break
+
 			optimizer.step()
 			
 			# for tag, value in model.named_parameters():
@@ -145,21 +167,31 @@ def train_model(model, criterion, optimizer, data_loader, epochs, n_bad_epochs, 
 
 		total_loss_current_epoch = np.sum(losses_batches_current_epoch)
 		tb.add_scalar("Loss every epoch", total_loss_current_epoch, epoch)
+
+		# loss_values_every_epoch.append(total_loss_current_epoch)
 		
 		total_correct_current_epoch = np.sum(correct_batches_current_epoch)
 		tb.add_scalar("Correct every epoch", total_correct_current_epoch, epoch)
 
-		accuracy_current_epoch = total_correct_current_epoch / len(X_train)
+		accuracy_current_epoch = total_correct_current_epoch / cardinality_training_set
 		tb.add_scalar("Accuracy every epoch", accuracy_current_epoch, epoch)
 
-		for tag, value in model.named_parameters():
-			tag = tag.replace('.', '/')
-			tb.add_histogram('every epoch_' + tag, value.data.cpu().detach().numpy(), epoch)
-			tb.add_histogram('every epoch_' + tag + '/grad', value.grad.data.cpu().numpy(), epoch)
+		# accuracy_every_epoch.append(accuracy_current_epoch)
+
+		# for tag, value in model.named_parameters():
+		# 	tag = tag.replace('.', '/')
+		# 	tb.add_histogram('every epoch_' + tag, value.data.cpu().detach().numpy(), epoch)
+		# 	tb.add_histogram('every epoch_' + tag + '/grad', value.grad.data.cpu().numpy(), epoch)
 
 		mean_loss_current_epoch = np.mean(losses_batches_current_epoch)
 
-        # If the validation loss is at a minimum
+		if epoch < 5 :
+			print(f"Epoch: {epoch}\t Total loss: {total_loss_current_epoch}")
+			continue
+		
+		if epoch == 5 :
+			print("Waiting for three consecutive epochs during which the mean loss over batches does not decrease...")
+        
 		if mean_loss_current_epoch < min_loss:
 			# Save the model
 			# torch.save(model)
@@ -170,13 +202,13 @@ def train_model(model, criterion, optimizer, data_loader, epochs, n_bad_epochs, 
 
 		print(f"Epoch: {epoch}\t Total loss: {total_loss_current_epoch}\t Mean Loss: {mean_loss_current_epoch}\t Current min mean loss: {min_loss}")
 
-		if epoch > 4 and patience > n_bad_epochs:
-			print(f"Early stopped at {epoch}-th epoch, since the mean loss over mini-batches didn't decrease during the last {n_bad_epochs} epochs")
+		if patience == n_bad_epochs:
+			print(f"Early stopped at {epoch}-th epoch, since the mean loss over batches didn't decrease during the last {n_bad_epochs} epochs")
 			return model, loss_values, epoch, total_loss_current_epoch, accuracy_current_epoch # loss_values_every_epoch, accuracy_every_epoch
 			# At the return moment,
 			# 		total_loss_current_epoch is the loss value of the last epoch
 
-	return model, loss_values, epoch, total_loss_current_epoch, accuracy_current_epoch
+	return model, loss_values, epoch, total_loss_current_epoch, accuracy_current_epoch 
 
 
 
@@ -295,17 +327,17 @@ if __name__ == "__main__":
 	X_val = dataset.X[val_idx]
 	X_test = dataset.X[test_idx]
 
-	train_year_max = torch.max(X_train[:,1])
-	train_year_min = torch.min(X_train[:,1])
-	dataset.X[train_idx, 1] = (X_train[:,1] - train_year_min)/(train_year_max - train_year_min)
-	dataset.X[val_idx, 1] = (X_val[:,1] - train_year_min)/(train_year_max - train_year_min)
-	dataset.X[test_idx, 1] = (X_test[:,1] - train_year_min)/(train_year_max - train_year_min)
+	train_year_max = torch.max(X_train[:,0])
+	train_year_min = torch.min(X_train[:,0])
+	dataset.X[train_idx, 0] = (X_train[:,0] - train_year_min)/(train_year_max - train_year_min)
+	dataset.X[val_idx, 0] = (X_val[:,0] - train_year_min)/(train_year_max - train_year_min)
+	dataset.X[test_idx, 0] = (X_test[:,0] - train_year_min)/(train_year_max - train_year_min)
 
-	train_title_length_max = torch.max(X_train[:,2])
-	train_title_length_min = torch.min(X_train[:,2])
-	dataset.X[train_idx, 2] = (X_train[:,2] - train_title_length_min)/(train_title_length_max - train_title_length_min)
-	dataset.X[val_idx, 2] = (X_val[:,2] - train_title_length_min)/(train_title_length_max - train_title_length_min)
-	dataset.X[test_idx, 2] = (X_test[:,2] - train_title_length_min)/(train_title_length_max - train_title_length_min)
+	train_title_length_max = torch.max(X_train[:,1])
+	train_title_length_min = torch.min(X_train[:,1])
+	dataset.X[train_idx, 1] = (X_train[:,1] - train_title_length_min)/(train_title_length_max - train_title_length_min)
+	dataset.X[val_idx, 1] = (X_val[:,1] - train_title_length_min)/(train_title_length_max - train_title_length_min)
+	dataset.X[test_idx, 1] = (X_test[:,1] - train_title_length_min)/(train_title_length_max - train_title_length_min)
 
 	y_train = dataset.y[train_idx]
 
@@ -352,8 +384,8 @@ if __name__ == "__main__":
 	columns = ["nr_train"] + list(all_configs[0].keys()) + ["epoch_stopped", "loss", "accuracy", "precision", "recall", "f1_score", "support"]
 	results = pd.DataFrame(columns=columns)
 
+	print(f"HYPERPARAMETER OPTIMIZATION over {args.idx_set}° params configurations set out of {args.nr_sets-1}")
 	for config_params in config_set:	
-
 		nr_train += 1
 		print(f"{nr_train}° training with params:")
 		pprint(config_params)
@@ -388,7 +420,9 @@ if __name__ == "__main__":
 			loss_func = config_params['loss_function'] 
 
 			optim = eval(config_params['optimizer'] + "(model.parameters(), lr=config_params['learning_rate'])")
-			model, loss_values, epoch_stopped, loss_value_last_epoch, accuracy_last_epoch = train_model(model, loss_func, optim, train_loader, config_params['num_epochs'], config_params['n_bad_epochs'], device, tb)
+
+			cardinality_training_set = len(X_train)
+			model, loss_values, epoch_stopped, loss_value_last_epoch, accuracy_last_epoch = train_model(model, loss_func, optim, train_loader, config_params['num_epochs'], config_params['n_bad_epochs'], device, tb, cardinality_training_set)
 			
 			print(f"Loss: {loss_value_last_epoch}", end="\n\n")
 

@@ -190,4 +190,4 @@ images/
 *.csv
 *.png
 tensorboard_logs
-
+results_hyperparams_optimization\*

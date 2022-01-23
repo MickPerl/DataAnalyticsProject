@@ -284,8 +284,8 @@ def dict_configs_from_params_cartesian_product(hyperparams) :
 			continue
 
 		#######################
-		if conf_params_dict['num_hidden_layers'] != 10 or conf_params_dict['batch_size'] != 512 or conf_params_dict['learning_rate'] != 1e-5:
-			continue
+		#if conf_params_dict['num_hidden_layers'] != 10 or conf_params_dict['batch_size'] != 512 or conf_params_dict['learning_rate'] != 1e-5:
+		#	continue
 
 		cartesian_product_filtered.append(conf_params_dict)
 	

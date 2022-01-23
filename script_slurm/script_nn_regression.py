@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
+from sklearn.metrics import mean_squared_error
 import itertools
 import torch
 from torch import nn
@@ -119,18 +120,18 @@ def train_model(model, criterion, optimizer, data_loader, epochs, n_bad_epochs, 
 			# Forward pass
 			
 			y_pred = model(data)
-			loss = criterion(y_pred, targets)
+			loss = criterion(y_pred.squeeze(), targets)
 			
 
-			correct = get_num_correct(y_pred, targets)
+			#correct = get_num_correct(y_pred, targets)
 			
 			tb.add_scalar("Loss every batch", loss, epoch * len(data_loader) + batch_idx + 1)
-			tb.add_scalar("Correct every batch", correct, epoch * len(data_loader) + batch_idx + 1)
-			tb.add_scalar("Accuracy every batch", correct / len(data), epoch * len(data_loader) + batch_idx + 1)
+			#tb.add_scalar("Correct every batch", correct, epoch * len(data_loader) + batch_idx + 1)
+			#tb.add_scalar("Accuracy every batch", correct / len(data), epoch * len(data_loader) + batch_idx + 1)
 
 			loss_values.append(loss.item())
 			losses_batches_current_epoch.append(loss.item())
-			correct_batches_current_epoch.append(correct)
+			#correct_batches_current_epoch.append(correct)
 
 			# Backward pass
 			loss.backward()
@@ -165,11 +166,11 @@ def train_model(model, criterion, optimizer, data_loader, epochs, n_bad_epochs, 
 
 		# loss_values_every_epoch.append(total_loss_current_epoch)
 		
-		total_correct_current_epoch = np.sum(correct_batches_current_epoch)
-		tb.add_scalar("Correct every epoch", total_correct_current_epoch, epoch)
+		#total_correct_current_epoch = np.sum(correct_batches_current_epoch)
+		#tb.add_scalar("Correct every epoch", total_correct_current_epoch, epoch)
 
-		accuracy_current_epoch = total_correct_current_epoch / cardinality_training_set
-		tb.add_scalar("Accuracy every epoch", accuracy_current_epoch, epoch)
+		#accuracy_current_epoch = total_correct_current_epoch / cardinality_training_set
+		#tb.add_scalar("Accuracy every epoch", accuracy_current_epoch, epoch)
 
 		# accuracy_every_epoch.append(accuracy_current_epoch)
 
@@ -199,11 +200,11 @@ def train_model(model, criterion, optimizer, data_loader, epochs, n_bad_epochs, 
 
 		if patience == n_bad_epochs:
 			print(f"Early stopped at {epoch}-th epoch, since the mean loss over batches didn't decrease during the last {n_bad_epochs} epochs")
-			return model, loss_values, epoch, total_loss_current_epoch, accuracy_current_epoch # loss_values_every_epoch, accuracy_every_epoch
+			return model, loss_values, epoch, total_loss_current_epoch# loss_values_every_epoch, accuracy_every_epoch
 			# At the return moment,
 			# 		total_loss_current_epoch is the loss value of the last epoch
 
-	return model, loss_values, epoch, total_loss_current_epoch, accuracy_current_epoch 
+	return model, loss_values, epoch, total_loss_current_epoch
 
 
 
@@ -216,10 +217,9 @@ def test_model(model, data_loader, device, output_dict = False):
 	    data, targets = samples[0].to(device), samples[1].to(device)
 	    y_pred.append(model(data))
 	    y_test.append(targets)
-	y_pred = torch.stack(y_pred).squeeze()
-	y_test = torch.stack(y_test).squeeze()
-	y_pred = y_pred.argmax(dim=1, keepdim=True).squeeze()
-	return classification_report(y_test.cpu(), y_pred.cpu(), zero_division=0, output_dict=output_dict)
+	y_pred = torch.stack(y_pred).squeeze().detach()
+	y_test = torch.stack(y_test).squeeze().detach()
+	return mean_squared_error(y_test.cpu(), y_pred.cpu())
 
 
 def set_reproducibility(seed = 42):
@@ -297,7 +297,7 @@ if __name__ == "__main__":
 
 
 	regression_hyperparams = {
-		'num_epochs' : [1],
+		'num_epochs' : [500],
 		'n_bad_epochs': [3],
 		'num_hidden_layers' : [3, 5, 7, 10],
 		'hidden_size' : [64, 128, 256],
@@ -314,8 +314,8 @@ if __name__ == "__main__":
 	}
 
 	dataset = MoviesDataset()
-	train_idx, test_idx = train_test_split(np.arange(len(dataset)), test_size=0.2, stratify=dataset.y, random_state=42)
-	train_idx, val_idx = train_test_split(train_idx, test_size=0.1, stratify=dataset.y[train_idx], random_state=42)
+	train_idx, test_idx = train_test_split(np.arange(len(dataset)), test_size=0.2, random_state=42)
+	train_idx, val_idx = train_test_split(train_idx, test_size=0.1, random_state=42)
 
 	# MinMaxScale training, validation and testing set su year e title_length
 	X_train = dataset.X[train_idx]
@@ -336,8 +336,6 @@ if __name__ == "__main__":
 
 	y_train = dataset.y[train_idx]
 
-	sample_weights = class_weights(y_train)
-	sampler_class_frequency = WeightedRandomSampler(sample_weights, len(train_idx))
 
 
 	all_configs = dict_configs_from_params_cartesian_product(regression_hyperparams)
@@ -347,7 +345,7 @@ if __name__ == "__main__":
 
 	set_reproducibility()	
 		
-	columns = ["nr_train"] + list(all_configs[0].keys()) + ["epoch_stopped", "loss", "accuracy", "precision", "precision_total", "recall", "recall_total", "f1_score", "f1_score_total", "support"]
+	columns = ["nr_train"] + list(all_configs[0].keys()) + ["epoch_stopped", "mse"]
 	results = pd.DataFrame(columns=columns)
 
 	for config_params in all_configs:
@@ -363,7 +361,7 @@ if __name__ == "__main__":
 			train_subset = Subset(dataset, train_idx)
 			val_subset=Subset(dataset, val_idx)
 			test_subset=Subset(dataset, test_idx)
-			train_loader=DataLoader(train_subset, batch_size=config_params['batch_size'], shuffle=False, sampler=sampler_class_frequency, drop_last=True)
+			train_loader=DataLoader(train_subset, batch_size=config_params['batch_size'], shuffle=False, drop_last=True)
 			val_loader=DataLoader(val_subset, batch_size=1, shuffle=False, drop_last=True)
 			test_loader=DataLoader(test_subset, batch_size=1, shuffle=False, drop_last=True)
 
@@ -385,23 +383,15 @@ if __name__ == "__main__":
 			optim = eval(config_params['optimizer'] + "(model.parameters(), lr=config_params['learning_rate'])")
 
 			cardinality_training_set = len(X_train)
-			model, loss_values, epoch_stopped, loss_value_last_epoch, accuracy_last_epoch = train_model(model, loss_func, optim, train_loader, config_params['num_epochs'], config_params['n_bad_epochs'], device, tb, cardinality_training_set)
+			model, loss_values, epoch_stopped, loss_value_last_epoch = train_model(model, loss_func, optim, train_loader, config_params['num_epochs'], config_params['n_bad_epochs'], device, tb, cardinality_training_set)
 			
 			print(f"Loss: {loss_value_last_epoch}", end="\n\n")
 
-			report = test_model(model, val_loader, device, True)
-			index_classes = len(report) - 3
-			f1_score = [float(report[str(i)]['f1-score']) for i in range(index_classes)]
-			f1_score_total = np.sum(f1_score)
-			precision = [float(report[str(i)]['precision']) for i in range(index_classes)]
-			precision_total = np.sum(precision)
-			recall = [float(report[str(i)]['recall']) for i in range(index_classes)]
-			recall_total = np.sum(recall)
-			support = [int(report[str(i)]['support']) for i in range(index_classes)]
-			accuracy = report['accuracy']
+			mse = test_model(model, val_loader, device, True)
 
 
-			row_values= [nr_train] + list_params_config + [epoch_stopped, loss_value_last_epoch, accuracy, precision, precision_total, recall, recall_total, f1_score, f1_score_total, support]
+
+			row_values= [nr_train] + list_params_config + [epoch_stopped, mse]
 			results=results.append(pd.Series(row_values, index=columns), ignore_index=True)
 			# plt.plot(loss_values)
 			# plt.title("Number of epochs: {}".format(num_epochs))

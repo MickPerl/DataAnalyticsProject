@@ -1,0 +1,1637 @@
+Looking in links: https://download.pytorch.org/whl/torch_stable.html
+Requirement already satisfied: numpy in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from -r ../requirements.txt (line 1)) (1.21.5)
+Requirement already satisfied: pandas in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from -r ../requirements.txt (line 2)) (1.3.5)
+Requirement already satisfied: torch==1.8.1+cu111 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from -r ../requirements.txt (line 4)) (1.8.1+cu111)
+Requirement already satisfied: sklearn in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from -r ../requirements.txt (line 5)) (0.0)
+Requirement already satisfied: matplotlib in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from -r ../requirements.txt (line 6)) (3.5.1)
+Requirement already satisfied: seaborn in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from -r ../requirements.txt (line 7)) (0.11.2)
+Requirement already satisfied: imbalanced-learn in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from -r ../requirements.txt (line 8)) (0.8.1)
+Requirement already satisfied: jupyter in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from -r ../requirements.txt (line 9)) (1.0.0)
+Requirement already satisfied: plotly in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from -r ../requirements.txt (line 10)) (5.5.0)
+Requirement already satisfied: matplotlib-inline in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from -r ../requirements.txt (line 11)) (0.1.3)
+Requirement already satisfied: typing-extensions in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from torch==1.8.1+cu111->-r ../requirements.txt (line 4)) (4.0.1)
+Requirement already satisfied: python-dateutil>=2.7.3 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from pandas->-r ../requirements.txt (line 2)) (2.8.2)
+Requirement already satisfied: pytz>=2017.3 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from pandas->-r ../requirements.txt (line 2)) (2021.3)
+Requirement already satisfied: scikit-learn in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from sklearn->-r ../requirements.txt (line 5)) (1.0.2)
+Requirement already satisfied: cycler>=0.10 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from matplotlib->-r ../requirements.txt (line 6)) (0.11.0)
+Requirement already satisfied: fonttools>=4.22.0 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from matplotlib->-r ../requirements.txt (line 6)) (4.28.5)
+Requirement already satisfied: pyparsing>=2.2.1 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from matplotlib->-r ../requirements.txt (line 6)) (3.0.6)
+Requirement already satisfied: pillow>=6.2.0 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from matplotlib->-r ../requirements.txt (line 6)) (9.0.0)
+Requirement already satisfied: kiwisolver>=1.0.1 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from matplotlib->-r ../requirements.txt (line 6)) (1.3.2)
+Requirement already satisfied: packaging>=20.0 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from matplotlib->-r ../requirements.txt (line 6)) (21.3)
+Requirement already satisfied: scipy>=1.0 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from seaborn->-r ../requirements.txt (line 7)) (1.7.3)
+Requirement already satisfied: joblib>=0.11 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from imbalanced-learn->-r ../requirements.txt (line 8)) (1.1.0)
+Requirement already satisfied: jupyter-console in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from jupyter->-r ../requirements.txt (line 9)) (6.4.0)
+Requirement already satisfied: ipywidgets in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from jupyter->-r ../requirements.txt (line 9)) (7.6.5)
+Requirement already satisfied: notebook in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from jupyter->-r ../requirements.txt (line 9)) (6.4.6)
+Requirement already satisfied: ipykernel in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from jupyter->-r ../requirements.txt (line 9)) (6.6.1)
+Requirement already satisfied: qtconsole in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from jupyter->-r ../requirements.txt (line 9)) (5.2.2)
+Requirement already satisfied: nbconvert in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from jupyter->-r ../requirements.txt (line 9)) (6.4.0)
+Requirement already satisfied: six in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from plotly->-r ../requirements.txt (line 10)) (1.16.0)
+Requirement already satisfied: tenacity>=6.2.0 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from plotly->-r ../requirements.txt (line 10)) (8.0.1)
+Requirement already satisfied: traitlets in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from matplotlib-inline->-r ../requirements.txt (line 11)) (5.1.1)
+Requirement already satisfied: threadpoolctl>=2.0.0 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from scikit-learn->sklearn->-r ../requirements.txt (line 5)) (3.0.0)
+Requirement already satisfied: jupyter-client<8.0 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from ipykernel->jupyter->-r ../requirements.txt (line 9)) (7.1.0)
+Requirement already satisfied: argcomplete>=1.12.3 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from ipykernel->jupyter->-r ../requirements.txt (line 9)) (2.0.0)
+Requirement already satisfied: tornado<7.0,>=4.2 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from ipykernel->jupyter->-r ../requirements.txt (line 9)) (6.1)
+Requirement already satisfied: importlib-metadata<5 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from ipykernel->jupyter->-r ../requirements.txt (line 9)) (4.10.0)
+Requirement already satisfied: nest-asyncio in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from ipykernel->jupyter->-r ../requirements.txt (line 9)) (1.5.4)
+Requirement already satisfied: debugpy<2.0,>=1.0.0 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from ipykernel->jupyter->-r ../requirements.txt (line 9)) (1.5.1)
+Requirement already satisfied: ipython>=7.23.1 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from ipykernel->jupyter->-r ../requirements.txt (line 9)) (7.31.0)
+Requirement already satisfied: jupyterlab-widgets>=1.0.0 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from ipywidgets->jupyter->-r ../requirements.txt (line 9)) (1.0.2)
+Requirement already satisfied: nbformat>=4.2.0 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from ipywidgets->jupyter->-r ../requirements.txt (line 9)) (5.1.3)
+Requirement already satisfied: ipython-genutils~=0.2.0 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from ipywidgets->jupyter->-r ../requirements.txt (line 9)) (0.2.0)
+Requirement already satisfied: widgetsnbextension~=3.5.0 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from ipywidgets->jupyter->-r ../requirements.txt (line 9)) (3.5.2)
+Requirement already satisfied: prompt-toolkit!=3.0.0,!=3.0.1,<3.1.0,>=2.0.0 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from jupyter-console->jupyter->-r ../requirements.txt (line 9)) (3.0.24)
+Requirement already satisfied: pygments in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from jupyter-console->jupyter->-r ../requirements.txt (line 9)) (2.11.1)
+Requirement already satisfied: jinja2>=2.4 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from nbconvert->jupyter->-r ../requirements.txt (line 9)) (3.0.3)
+Requirement already satisfied: jupyterlab-pygments in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from nbconvert->jupyter->-r ../requirements.txt (line 9)) (0.1.2)
+Requirement already satisfied: mistune<2,>=0.8.1 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from nbconvert->jupyter->-r ../requirements.txt (line 9)) (0.8.4)
+Requirement already satisfied: testpath in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from nbconvert->jupyter->-r ../requirements.txt (line 9)) (0.5.0)
+Requirement already satisfied: entrypoints>=0.2.2 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from nbconvert->jupyter->-r ../requirements.txt (line 9)) (0.3)
+Requirement already satisfied: pandocfilters>=1.4.1 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from nbconvert->jupyter->-r ../requirements.txt (line 9)) (1.5.0)
+Requirement already satisfied: nbclient<0.6.0,>=0.5.0 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from nbconvert->jupyter->-r ../requirements.txt (line 9)) (0.5.9)
+Requirement already satisfied: jupyter-core in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from nbconvert->jupyter->-r ../requirements.txt (line 9)) (4.9.1)
+Requirement already satisfied: bleach in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from nbconvert->jupyter->-r ../requirements.txt (line 9)) (4.1.0)
+Requirement already satisfied: defusedxml in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from nbconvert->jupyter->-r ../requirements.txt (line 9)) (0.7.1)
+Requirement already satisfied: pyzmq>=17 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from notebook->jupyter->-r ../requirements.txt (line 9)) (22.3.0)
+Requirement already satisfied: Send2Trash>=1.8.0 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from notebook->jupyter->-r ../requirements.txt (line 9)) (1.8.0)
+Requirement already satisfied: prometheus-client in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from notebook->jupyter->-r ../requirements.txt (line 9)) (0.12.0)
+Requirement already satisfied: terminado>=0.8.3 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from notebook->jupyter->-r ../requirements.txt (line 9)) (0.12.1)
+Requirement already satisfied: argon2-cffi in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from notebook->jupyter->-r ../requirements.txt (line 9)) (21.3.0)
+Requirement already satisfied: qtpy in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from qtconsole->jupyter->-r ../requirements.txt (line 9)) (2.0.0)
+Requirement already satisfied: zipp>=0.5 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from importlib-metadata<5->ipykernel->jupyter->-r ../requirements.txt (line 9)) (3.7.0)
+Requirement already satisfied: decorator in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from ipython>=7.23.1->ipykernel->jupyter->-r ../requirements.txt (line 9)) (5.1.0)
+Requirement already satisfied: backcall in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from ipython>=7.23.1->ipykernel->jupyter->-r ../requirements.txt (line 9)) (0.2.0)
+Requirement already satisfied: pickleshare in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from ipython>=7.23.1->ipykernel->jupyter->-r ../requirements.txt (line 9)) (0.7.5)
+Requirement already satisfied: pexpect>4.3 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from ipython>=7.23.1->ipykernel->jupyter->-r ../requirements.txt (line 9)) (4.8.0)
+Requirement already satisfied: jedi>=0.16 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from ipython>=7.23.1->ipykernel->jupyter->-r ../requirements.txt (line 9)) (0.18.1)
+Requirement already satisfied: setuptools>=18.5 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from ipython>=7.23.1->ipykernel->jupyter->-r ../requirements.txt (line 9)) (60.2.0)
+Requirement already satisfied: MarkupSafe>=2.0 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from jinja2>=2.4->nbconvert->jupyter->-r ../requirements.txt (line 9)) (2.0.1)
+Requirement already satisfied: jsonschema!=2.5.0,>=2.4 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from nbformat>=4.2.0->ipywidgets->jupyter->-r ../requirements.txt (line 9)) (4.3.3)
+Requirement already satisfied: wcwidth in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from prompt-toolkit!=3.0.0,!=3.0.1,<3.1.0,>=2.0.0->jupyter-console->jupyter->-r ../requirements.txt (line 9)) (0.2.5)
+Requirement already satisfied: ptyprocess in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from terminado>=0.8.3->notebook->jupyter->-r ../requirements.txt (line 9)) (0.7.0)
+Requirement already satisfied: argon2-cffi-bindings in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from argon2-cffi->notebook->jupyter->-r ../requirements.txt (line 9)) (21.2.0)
+Requirement already satisfied: webencodings in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from bleach->nbconvert->jupyter->-r ../requirements.txt (line 9)) (0.5.1)
+Requirement already satisfied: parso<0.9.0,>=0.8.0 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from jedi>=0.16->ipython>=7.23.1->ipykernel->jupyter->-r ../requirements.txt (line 9)) (0.8.3)
+Requirement already satisfied: pyrsistent!=0.17.0,!=0.17.1,!=0.17.2,>=0.14.0 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from jsonschema!=2.5.0,>=2.4->nbformat>=4.2.0->ipywidgets->jupyter->-r ../requirements.txt (line 9)) (0.18.0)
+Requirement already satisfied: attrs>=17.4.0 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from jsonschema!=2.5.0,>=2.4->nbformat>=4.2.0->ipywidgets->jupyter->-r ../requirements.txt (line 9)) (21.4.0)
+Requirement already satisfied: importlib-resources>=1.4.0 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from jsonschema!=2.5.0,>=2.4->nbformat>=4.2.0->ipywidgets->jupyter->-r ../requirements.txt (line 9)) (5.4.0)
+Requirement already satisfied: cffi>=1.0.1 in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from argon2-cffi-bindings->argon2-cffi->notebook->jupyter->-r ../requirements.txt (line 9)) (1.15.0)
+Requirement already satisfied: pycparser in /public/mick.perl/DataAnalyticsProject/venv/lib/python3.7/site-packages (from cffi>=1.0.1->argon2-cffi-bindings->argon2-cffi->notebook->jupyter->-r ../requirements.txt (line 9)) (2.21)
+************************************** 1 out of 64 params' configurations --> C: 0.01, gamma: 1e-05
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7309236947791165
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7296686746987953
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9083835341365462
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7299196787148594
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7261546184738956
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.6970381526104418
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7311746987951807
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 0.01, gamma: 1e-05) --> 0.7361947791164658
+
+
+************************************** 2 out of 64 params' configurations --> C: 0.01, gamma: 0.0001
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7309236947791165
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7296686746987953
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9083835341365462
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7299196787148594
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7261546184738956
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.6970381526104418
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7311746987951807
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 0.01, gamma: 0.0001) --> 0.7361947791164658
+
+
+************************************** 3 out of 64 params' configurations --> C: 0.01, gamma: 0.001
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7309236947791165
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7296686746987953
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9083835341365462
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7299196787148594
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7261546184738956
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.6970381526104418
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7311746987951807
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 0.01, gamma: 0.001) --> 0.7361947791164658
+
+
+************************************** 4 out of 64 params' configurations --> C: 0.01, gamma: 0.01
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7309236947791165
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7296686746987953
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9083835341365462
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7299196787148594
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7261546184738956
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.6970381526104418
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7311746987951807
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 0.01, gamma: 0.01) --> 0.7361947791164658
+
+
+************************************** 5 out of 64 params' configurations --> C: 0.01, gamma: 0.1
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7309236947791165
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7296686746987953
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9083835341365462
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7299196787148594
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7261546184738956
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.6970381526104418
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7311746987951807
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 0.01, gamma: 0.1) --> 0.7361947791164658
+
+
+************************************** 6 out of 64 params' configurations --> C: 0.01, gamma: 1.0
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7309236947791165
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7296686746987953
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9083835341365462
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7299196787148594
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7261546184738956
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.6970381526104418
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7311746987951807
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 0.01, gamma: 1.0) --> 0.7361947791164658
+
+
+************************************** 7 out of 64 params' configurations --> C: 0.01, gamma: 10.0
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7309236947791165
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7296686746987953
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9083835341365462
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7299196787148594
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7261546184738956
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.6970381526104418
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7311746987951807
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 0.01, gamma: 10.0) --> 0.7361947791164658
+
+
+************************************** 8 out of 64 params' configurations --> C: 0.01, gamma: 100.0
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7309236947791165
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7296686746987953
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9083835341365462
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7299196787148594
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7261546184738956
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.6970381526104418
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.7311746987951807
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 0.01, gamma: 100.0) --> 0.7361947791164658
+
+
+************************************** 9 out of 64 params' configurations --> C: 0.1, gamma: 1e-05
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8448795180722891
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9367469879518072
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8529116465863453
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9121485943775101
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9176706827309237
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9492971887550201
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8940763052208835
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 0.1, gamma: 1e-05) --> 0.9279618473895582
+
+
+************************************** 10 out of 64 params' configurations --> C: 0.1, gamma: 0.0001
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8448795180722891
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9367469879518072
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8529116465863453
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9121485943775101
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9176706827309237
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9492971887550201
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8940763052208835
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 0.1, gamma: 0.0001) --> 0.9279618473895582
+
+
+************************************** 11 out of 64 params' configurations --> C: 0.1, gamma: 0.001
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8448795180722891
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9367469879518072
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8529116465863453
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9121485943775101
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9176706827309237
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9492971887550201
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8940763052208835
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 0.1, gamma: 0.001) --> 0.9279618473895582
+
+
+************************************** 12 out of 64 params' configurations --> C: 0.1, gamma: 0.01
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8448795180722891
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9367469879518072
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8529116465863453
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9121485943775101
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9176706827309237
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9492971887550201
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8940763052208835
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 0.1, gamma: 0.01) --> 0.9279618473895582
+
+
+************************************** 13 out of 64 params' configurations --> C: 0.1, gamma: 0.1
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8448795180722891
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9367469879518072
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8529116465863453
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9121485943775101
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9176706827309237
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9492971887550201
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8940763052208835
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 0.1, gamma: 0.1) --> 0.9279618473895582
+
+
+************************************** 14 out of 64 params' configurations --> C: 0.1, gamma: 1.0
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8448795180722891
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9367469879518072
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8529116465863453
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9121485943775101
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9176706827309237
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9492971887550201
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8940763052208835
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 0.1, gamma: 1.0) --> 0.9279618473895582
+
+
+************************************** 15 out of 64 params' configurations --> C: 0.1, gamma: 10.0
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8448795180722891
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9367469879518072
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8529116465863453
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9121485943775101
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9176706827309237
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9492971887550201
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8940763052208835
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 0.1, gamma: 10.0) --> 0.9279618473895582
+
+
+************************************** 16 out of 64 params' configurations --> C: 0.1, gamma: 100.0
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8448795180722891
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9367469879518072
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8529116465863453
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9121485943775101
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9176706827309237
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9492971887550201
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8940763052208835
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 0.1, gamma: 100.0) --> 0.9279618473895582
+
+
+************************************** 17 out of 64 params' configurations --> C: 1.0, gamma: 1e-05
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8428714859437751
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9317269076305221
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8504016064257028
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9058734939759037
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.919929718875502
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9445281124497992
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8923192771084337
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 1.0, gamma: 1e-05) --> 0.9274598393574297
+
+
+************************************** 18 out of 64 params' configurations --> C: 1.0, gamma: 0.0001
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8428714859437751
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9317269076305221
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8504016064257028
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9058734939759037
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.919929718875502
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9445281124497992
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8923192771084337
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 1.0, gamma: 0.0001) --> 0.9274598393574297
+
+
+************************************** 19 out of 64 params' configurations --> C: 1.0, gamma: 0.001
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8428714859437751
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9317269076305221
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8504016064257028
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9058734939759037
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.919929718875502
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9445281124497992
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8923192771084337
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 1.0, gamma: 0.001) --> 0.9274598393574297
+
+
+************************************** 20 out of 64 params' configurations --> C: 1.0, gamma: 0.01
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8428714859437751
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9317269076305221
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8504016064257028
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9058734939759037
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.919929718875502
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9445281124497992
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8923192771084337
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 1.0, gamma: 0.01) --> 0.9274598393574297
+
+
+************************************** 21 out of 64 params' configurations --> C: 1.0, gamma: 0.1
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8428714859437751
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9317269076305221
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8504016064257028
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9058734939759037
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.919929718875502
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9445281124497992
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8923192771084337
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 1.0, gamma: 0.1) --> 0.9274598393574297
+
+
+************************************** 22 out of 64 params' configurations --> C: 1.0, gamma: 1.0
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8428714859437751
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9317269076305221
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8504016064257028
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9058734939759037
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.919929718875502
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9445281124497992
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8923192771084337
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 1.0, gamma: 1.0) --> 0.9274598393574297
+
+
+************************************** 23 out of 64 params' configurations --> C: 1.0, gamma: 10.0
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8428714859437751
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9317269076305221
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8504016064257028
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9058734939759037
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.919929718875502
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9445281124497992
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8923192771084337
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 1.0, gamma: 10.0) --> 0.9274598393574297
+
+
+************************************** 24 out of 64 params' configurations --> C: 1.0, gamma: 100.0
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8428714859437751
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9317269076305221
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8504016064257028
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9058734939759037
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.919929718875502
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9445281124497992
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8923192771084337
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 1.0, gamma: 100.0) --> 0.9274598393574297
+
+
+************************************** 25 out of 64 params' configurations --> C: 10.0, gamma: 1e-05
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8423694779116466
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9319779116465864
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8501506024096386
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9053714859437751
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9149096385542168
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9445281124497992
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8920682730923695
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 10.0, gamma: 1e-05) --> 0.9274598393574297
+
+
+************************************** 26 out of 64 params' configurations --> C: 10.0, gamma: 0.0001
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8423694779116466
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9319779116465864
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8501506024096386
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9053714859437751
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9149096385542168
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9445281124497992
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8920682730923695
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 10.0, gamma: 0.0001) --> 0.9274598393574297
+
+
+************************************** 27 out of 64 params' configurations --> C: 10.0, gamma: 0.001
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8423694779116466
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9319779116465864
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8501506024096386
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9053714859437751
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9149096385542168
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9445281124497992
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8920682730923695
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 10.0, gamma: 0.001) --> 0.9274598393574297
+
+
+************************************** 28 out of 64 params' configurations --> C: 10.0, gamma: 0.01
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8423694779116466
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9319779116465864
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8501506024096386
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9053714859437751
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9149096385542168
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9445281124497992
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8920682730923695
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 10.0, gamma: 0.01) --> 0.9274598393574297
+
+
+************************************** 29 out of 64 params' configurations --> C: 10.0, gamma: 0.1
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8423694779116466
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9319779116465864
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8501506024096386
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9053714859437751
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9149096385542168
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9445281124497992
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8920682730923695
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 10.0, gamma: 0.1) --> 0.9274598393574297
+
+
+************************************** 30 out of 64 params' configurations --> C: 10.0, gamma: 1.0
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8423694779116466
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9319779116465864
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8501506024096386
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9053714859437751
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9149096385542168
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9445281124497992
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8920682730923695
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 10.0, gamma: 1.0) --> 0.9274598393574297
+
+
+************************************** 31 out of 64 params' configurations --> C: 10.0, gamma: 10.0
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8423694779116466
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9319779116465864
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8501506024096386
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9053714859437751
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9149096385542168
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9445281124497992
+****7° FIT su 7° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8920682730923695
+***********ENDING BAGGING***********
+VOTING
+LOSS ENSEMBLE (C: 10.0, gamma: 10.0) --> 0.9274598393574297
+
+
+************************************** 32 out of 64 params' configurations --> C: 10.0, gamma: 100.0
+***********STARTING BAGGING***********
+****1° FIT su 1° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8423694779116466
+****2° FIT su 2° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9319779116465864
+****3° FIT su 3° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.8501506024096386
+****4° FIT su 4° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9053714859437751
+****5° FIT su 5° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING
+LOSS --> 0.9149096385542168
+****6° FIT su 6° sample del train****
+PRE-PROCESSING --> split_XYweights
+CHANGING DATAFRAME FOR HAMMING
+PRE-PROCESSING --> MinMaxScaling
+FITTING & PREDICTING

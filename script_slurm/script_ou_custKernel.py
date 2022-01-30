@@ -15,8 +15,6 @@ np.random.seed(42)
 
 def distance(a,b):
 	d = np.sqrt(np.square(np.subtract(a[0:2], b[0:2])).sum())     # distanze element wise tra year, title_length
-	# print(a[2])
-	# print(b[2])
 	d += np.bitwise_xor(a[2], b[2]).sum()/len(a[2]) # hamming
 	d += np.sqrt(np.square(np.subtract(a[3], b[3])).sum())
 	return d
@@ -140,10 +138,6 @@ for c in C_range:
 			error = zero_one_loss(y_val_SVC, y_val_pred)
 			print(f"LOSS --> {error}")
 		print("***********ENDING BAGGING***********")
-
-		# y_val_preds = [[predictions after fit su 1° sample], [predictions after fit su 2° sample], [...], ...]
-		# therefore, len(y_val_preds) == len(df_trains)
-		# 			 len(y_val_preds[idx]) == len(X_val_SVC) == nr different predictions, with idx the n-th sample
 		
 		nr_predictions = len(y_val_preds[0])
 		y_val_pred_voted = []

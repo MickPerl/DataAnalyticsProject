@@ -189,3 +189,4 @@ datasets/
 script_slurm/tensorboard_logs/
 results_hyperparams_optimization/NN/tensorboard_logs/
 results_hyperparams_optimization/SVC/tensorboard_logs/
+tensorboard_logs/

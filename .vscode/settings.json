@@ -1,5 +1,5 @@
 {
-    "jupyter.jupyterServerType": "local",
+    "jupyter.jupyterServerType": "remote",
     "python.formatting.provider": "autopep8",
 	"python.pythonPath": "venv\\Scripts\\python.exe",
 	"python.linting.pylintEnabled": true,

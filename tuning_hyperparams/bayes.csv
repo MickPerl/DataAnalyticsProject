@@ -1,0 +1,7 @@
+size,sample,technique,loss_ensemble
+7898,2,CategoricalNB,0.5695281124497992
+7898,2,GaussianNB,0.6184738955823292
+7898,2,QuadraticDiscriminantAnalysis,0.6521084337349398
+15797,1,CategoricalNB,0.47540160642570284
+15797,1,GaussianNB,0.6044176706827309
+15797,1,QuadraticDiscriminantAnalysis,0.632781124497992
